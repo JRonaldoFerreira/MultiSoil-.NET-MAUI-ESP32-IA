@@ -7,7 +7,7 @@
 - **Won’t**: Integração com redes sociais na V1
 
 ## User Stories (linkadas)
-- [ ] Protótipos de Telas Principais — #1
+- [ ] Protótipos de Telas Principais — #1(https://github.com/JRonaldoFerreira/MultiSoil-.NET-MAUI-ESP32-IA/issues/1)
 - [ ] Login/Autenticação do Usuário — #2
 - [ ] Conexão via BLE ao ESP32 — #3
 - [ ] Configuração Wi-Fi SoftAP — #4
