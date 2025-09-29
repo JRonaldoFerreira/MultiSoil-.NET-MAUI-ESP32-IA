@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiSoil_EdgeAI", "MultiSoil_EdgeAI.csproj", "{886670E4-6BC4-43B8-A327-1E2D72EF771F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{886670E4-6BC4-43B8-A327-1E2D72EF771F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{886670E4-6BC4-43B8-A327-1E2D72EF771F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{886670E4-6BC4-43B8-A327-1E2D72EF771F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{886670E4-6BC4-43B8-A327-1E2D72EF771F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3104A3E0-60BD-4CF3-831F-974615CC9FF5}
+	EndGlobalSection
+EndGlobal
