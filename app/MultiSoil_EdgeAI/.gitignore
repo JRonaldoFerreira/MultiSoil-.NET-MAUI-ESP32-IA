@@ -1,0 +1,6 @@
+# VS/MAUI
+.vs/
+**/bin/
+**/obj/
+# Android/Gradle cache da build
+**/lp/
