@@ -3,7 +3,7 @@ using MultiSoil_EdgeAI.Utils;
 
 namespace MultiSoil_EdgeAI.Views;
 
-public partial class DashboardPage : ContentPage
+public partial class DashboardPage : ContentPage //resolvndo a issue 15
 {
     ISessionService Session => ServiceHelper.GetService<ISessionService>();
     IAuthService Auth => ServiceHelper.GetService<IAuthService>();
