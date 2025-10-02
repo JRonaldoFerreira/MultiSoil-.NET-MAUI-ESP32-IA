@@ -1,10 +1,22 @@
 <ContentPage x:Class="MultiSoil_EdgeAI.Views.DashboardPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:MultiSoil_EdgeAI.ViewModels"
+             xmlns:beh="clr-namespace:MultiSoil_EdgeAI.Behaviors"
              Title="Dashboard">
-    <VerticalStackLayout Padding="20">
+
+    <ContentPage.Behaviors>
+        <beh:AuthGuardBehavior/>
+    </ContentPage.Behaviors>
+
+    <VerticalStackLayout Padding="20" Spacing="12">
         <Label Text="Dashboard" FontSize="24" FontAttributes="Bold"/>
-        <Label Text="(stub para próxima sprint)"/>
+
+        <!-- Botão que renova o TTL na hora -->
+        <Button Text="Estou ativo (renovar sessão)" Clicked="OnKeepAliveClicked"/>
+
+        <!-- HUD de debug: mostra tempo restante da sessão -->
+        <Label x:Name="LblRemaining" FontSize="12" TextColor="#64748B" />
+
+        <Button Text="Logout" Clicked="OnLogoutClicked"/>
     </VerticalStackLayout>
 </ContentPage>

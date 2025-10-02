@@ -1,0 +1,13 @@
+<ContentPage x:Class="MultiSoil_EdgeAI.Views.ReauthPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Sessão expirada">
+    <VerticalStackLayout Padding="24" Spacing="12">
+        <Label Text="Reautenticar" FontSize="20" FontAttributes="Bold"/>
+        <Label Text="{Binding EmailMasked}" TextColor="#64748B"/>
+        <Entry Placeholder="Senha" IsPassword="True" Text="{Binding Password}"/>
+        <Button Text="Desbloquear" Command="{Binding ReauthCommand}"/>
+        <Button Text="Trocar de usuário" Command="{Binding TrocarUsuarioCommand}" />
+        <Label Text="{Binding ErrorMessage}" TextColor="#DC2626"/>
+    </VerticalStackLayout>
+</ContentPage>
