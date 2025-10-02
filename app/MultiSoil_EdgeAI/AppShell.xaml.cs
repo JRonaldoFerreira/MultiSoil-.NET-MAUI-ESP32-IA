@@ -1,10 +1,12 @@
-﻿namespace MultiSoil_EdgeAI
+﻿namespace MultiSoil_EdgeAI;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+
+        // Rotas para navegação
+        Routing.RegisterRoute(nameof(Views.RegisterPage), typeof(Views.RegisterPage));
     }
 }

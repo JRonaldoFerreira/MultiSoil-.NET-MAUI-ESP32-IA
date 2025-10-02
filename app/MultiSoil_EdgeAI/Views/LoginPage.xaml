@@ -1,0 +1,73 @@
+<ContentPage
+    x:Class="MultiSoil_EdgeAI.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:MultiSoil_EdgeAI.ViewModels"
+    Title="Login"
+    BackgroundColor="{AppThemeBinding Light=#F7F9F7, Dark=#0B0F0B}">
+
+    <ContentPage.Resources>
+        <Style TargetType="Entry">
+            <Setter Property="HeightRequest" Value="44"/>
+            <Setter Property="Margin" Value="0,8"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="HeightRequest" Value="48"/>
+        </Style>
+        <Style TargetType="Label" x:Key="Hint">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="TextColor" Value="#6B7280"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="16,12">
+        <!-- Top bar -->
+        <Grid RowDefinitions="Auto" ColumnDefinitions="*,Auto" Padding="0,4" BackgroundColor="Transparent">
+            <VerticalStackLayout Grid.Column="0" Spacing="0">
+                <Label Text="MultiSoil EdgeAI" FontSize="20" FontAttributes="Bold"/>
+                <HorizontalStackLayout Spacing="6">
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#16A34A" VerticalOptions="Center"/>
+                    <Label Text="ESP32 Online • 120ms" FontSize="12" TextColor="#16A34A"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Menu fictício (tabs da Shell cuidam da navegação após login) -->
+            <HorizontalStackLayout Grid.Column="1" Spacing="12">
+                <Label Text="Dashboard" TextDecorations="Underline" IsVisible="False"/>
+                <Label Text="Leituras" IsVisible="False"/>
+                <Label Text="Histórico" IsVisible="False"/>
+                <Label Text="Previsão" IsVisible="False"/>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <!-- Card de login -->
+        <Frame Grid.Row="1" Padding="20" Margin="0,20" HasShadow="True" CornerRadius="14" BackgroundColor="{AppThemeBinding Light=White, Dark=#111315}">
+            <VerticalStackLayout Spacing="10">
+                <HorizontalStackLayout>
+                    <Image Source="dotnet_bot.png" HeightRequest="20" WidthRequest="20" IsVisible="False"/>
+                    <Label Text="Entrar" FontSize="18" FontAttributes="Bold"/>
+                </HorizontalStackLayout>
+
+                <Label Text="Email" />
+                <Entry Text="{Binding Email}" Placeholder="ana@example.com" Keyboard="Email" />
+
+                <Label Text="Senha" />
+                <Entry Text="{Binding Password}" IsPassword="True" Placeholder="••••••••" />
+
+                <Button Text="Entrar" Command="{Binding EntrarCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}, FallbackValue=True}" />
+
+                <Label Text="{Binding ErrorMessage}" TextColor="#DC2626" IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotNullOrEmptyConverter}}" />
+
+                <Label Text="Esqueci Senha" TextColor="#2563EB">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding IrParaCadastroCommand}" NumberOfTapsRequired="1"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <Label Style="{StaticResource Hint}"
+                       Text="Ao autenticar, conexão com API ESP32 será iniciada automaticamente."/>
+            </VerticalStackLayout>
+        </Frame>
+    </Grid>
+</ContentPage>

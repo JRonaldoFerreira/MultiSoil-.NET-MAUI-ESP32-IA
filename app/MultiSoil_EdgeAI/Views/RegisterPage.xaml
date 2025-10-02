@@ -1,0 +1,18 @@
+<ContentPage
+    x:Class="MultiSoil_EdgeAI.Views.RegisterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:MultiSoil_EdgeAI.ViewModels"
+    Title="Criar conta">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="10">
+            <Label Text="Criar conta" FontAttributes="Bold" FontSize="20"/>
+            <Entry Placeholder="email@dominio.com" Keyboard="Email" Text="{Binding Email}"/>
+            <Entry Placeholder="Senha" IsPassword="True" Text="{Binding Password}"/>
+            <Entry Placeholder="Confirmar Senha" IsPassword="True" Text="{Binding ConfirmPassword}"/>
+            <Button Text="Registrar" Command="{Binding RegistrarCommand}"/>
+            <Label Text="{Binding ErrorMessage}" TextColor="Red"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
