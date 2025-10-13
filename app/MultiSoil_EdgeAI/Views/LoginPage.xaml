@@ -59,7 +59,7 @@
 
                 <Label Text="{Binding ErrorMessage}" TextColor="#DC2626" IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotNullOrEmptyConverter}}" />
 
-                <Label Text="Esqueci Senha" TextColor="#2563EB">
+                <Label Text="Criar conta" TextColor="#2563EB">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding IrParaCadastroCommand}" NumberOfTapsRequired="1"/>
                     </Label.GestureRecognizers>

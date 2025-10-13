@@ -14,9 +14,7 @@
         <!-- Botão que renova o TTL na hora -->
         <Button Text="Estou ativo (renovar sessão)" Clicked="OnKeepAliveClicked"/>
 
-        <!-- HUD de debug: mostra tempo restante da sessão -->
-        <Label x:Name="LblRemaining" FontSize="12" TextColor="#64748B" />
-
+ 
         <Button Text="Logout" Clicked="OnLogoutClicked"/>
     </VerticalStackLayout>
 </ContentPage>

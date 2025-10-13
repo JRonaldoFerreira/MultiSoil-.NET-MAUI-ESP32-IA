@@ -19,7 +19,7 @@ public class AuthService : IAuthService
         var res = await _users.AuthenticateAsync(email.Trim().ToLowerInvariant(), password);
         if (res.Success && res.User is not null)
             await _session.StartAsync(res.User.Id, res.User.Email,
-                          ttl: TimeSpan.FromSeconds(10),
+                          ttl: TimeSpan.FromSeconds(8),
                           sliding: true);
         return res;
     }
