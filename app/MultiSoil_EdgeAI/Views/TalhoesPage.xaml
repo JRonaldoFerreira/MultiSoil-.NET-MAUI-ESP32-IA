@@ -1,0 +1,41 @@
+<ContentPage x:Class="MultiSoil_EdgeAI.Views.TalhoesPage"
+xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+xmlns:beh="clr-namespace:MultiSoil_EdgeAI.Behaviors"
+xmlns:vm="clr-namespace:MultiSoil_EdgeAI.ViewModels"
+Title="Talhões">
+    
+    <ContentPage.Behaviors>
+        <beh:AuthGuardBehavior/>
+    </ContentPage.Behaviors>
+
+    <VerticalStackLayout Padding="16" Spacing="12">
+        <HorizontalStackLayout>
+            <SearchBar Placeholder="Buscar" Text="{Binding Busca}" HorizontalOptions="FillAndExpand"/>
+            <Button Text="+ Novo" Command="{Binding NovoCmd}"/>
+        </HorizontalStackLayout>
+
+
+        <CollectionView ItemsSource="{Binding Itens}" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="12" CornerRadius="14" HasShadow="True" Margin="0,6">
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                            <Label Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Nome}" FontAttributes="Bold" FontSize="16"/>
+                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding Cultura}"/>
+                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding AreaHa, StringFormat='{}{0:F1} ha'}"/>
+                            <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="8">
+                                <Button Text="Ativar" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AtivarCmd}" CommandParameter="{Binding .}"/>
+                                <Button Text="Editar" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditarCmd}" CommandParameter="{Binding .}"/>
+                                <Button Text="Excluir" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ExcluirCmd}" CommandParameter="{Binding .}"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+
+
+   
+</ContentPage>

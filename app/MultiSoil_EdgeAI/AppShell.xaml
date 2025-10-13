@@ -6,7 +6,7 @@
     xmlns:views="clr-namespace:MultiSoil_EdgeAI.Views"
     Shell.FlyoutBehavior="Disabled">
 
-    <!-- ROTA APENAS PARA LOGIN (primeira tela ao abrir) -->
+    <!-- ROTA APENAS PARA LOGIN (primeira tela ao abrir via navegação) -->
     <ShellContent Route="login"
                   ContentTemplate="{DataTemplate views:LoginPage}" />
 
@@ -14,6 +14,5 @@
     <TabBar Route="main">
         <ShellContent Title="Dashboard" Route="dashboard"
                       ContentTemplate="{DataTemplate views:DashboardPage}" />
-        
     </TabBar>
 </Shell>

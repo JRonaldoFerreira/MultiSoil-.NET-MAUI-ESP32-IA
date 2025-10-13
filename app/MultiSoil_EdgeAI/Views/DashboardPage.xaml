@@ -1,20 +1,115 @@
-<ContentPage x:Class="MultiSoil_EdgeAI.Views.DashboardPage"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:beh="clr-namespace:MultiSoil_EdgeAI.Behaviors"
-             Title="Dashboard">
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MultiSoil_EdgeAI.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:beh="clr-namespace:MultiSoil_EdgeAI.Behaviors"
+    Title="Dashboard">
 
     <ContentPage.Behaviors>
         <beh:AuthGuardBehavior/>
     </ContentPage.Behaviors>
 
-    <VerticalStackLayout Padding="20" Spacing="12">
-        <Label Text="Dashboard" FontSize="24" FontAttributes="Bold"/>
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                <Label Text="Dashboard" FontSize="24" FontAttributes="Bold"/>
+                <Label Grid.Row="1" Text="ESP32 • Online ●  |  Últ. sync 12h24m"
+                       FontSize="12" TextColor="Gray"/>
+            </Grid>
 
-        <!-- Botão que renova o TTL na hora -->
-        <Button Text="Estou ativo (renovar sessão)" Clicked="OnKeepAliveClicked"/>
+            <!-- Talhão ativo -->
+            <Border Padding="12" StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                    <VerticalStackLayout>
+                        <Label Text="Talhão ativo" FontAttributes="Bold"/>
+                        <!-- x:Name é essencial p/ code-behind -->
+                        <Picker x:Name="TalhaoPicker" Title="Selecione"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="+ Cadastrar Talhão" Clicked="OnNovoTalhaoClicked"/>
+                </Grid>
+            </Border>
 
- 
-        <Button Text="Logout" Clicked="OnLogoutClicked"/>
-    </VerticalStackLayout>
+            <!-- Status do Sistema -->
+            <Border Padding="12" StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout>
+                    <Label Text="Status do Sistema" FontAttributes="Bold"/>
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="API"/>
+                        <Label Text="Online" HorizontalTextAlignment="End"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="Dispositivo"/>
+                        <Label Text="ESP32-01" HorizontalTextAlignment="End"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="Uptime"/>
+                        <Label Text="12h24m" HorizontalTextAlignment="End"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="RSSI"/>
+                        <Label Text="-58 dBm" HorizontalTextAlignment="End"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="Latência"/>
+                        <Label Text="92 ms" HorizontalTextAlignment="End"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Últimas Leituras (placeholder) -->
+            <Border Padding="12" StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Últimas Leituras" FontAttributes="Bold"/>
+                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
+                        <Label Text="NPK 12·9·14"/>
+                        <Label Grid.Column="1" Text="pH 6.5"/>
+                        <Label Grid.Column="2" Text="CE 1.7 mS/cm"/>
+                        <Label Grid.Row="1" Grid.ColumnSpan="3"
+                               Text="Temp 24.1°C • Umid 60% • Atualizado há 30s"/>
+                    </Grid>
+                    <Button Text="Ver Histórico" Clicked="OnHistoricoClicked"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Ações Rápidas -->
+            <Border Padding="12" StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Ações Rápidas" FontAttributes="Bold"/>
+                    <Button Text="Iniciar leituras em tempo real" Clicked="OnLeiturasClicked"/>
+                    <Button Text="Cadastrar Talhão" Clicked="OnNovoTalhaoClicked"/>
+                    <Button Text="Histórico" Clicked="OnHistoricoClicked"/>
+                    <Button Text="Ir para previsões" Clicked="OnPrevisoesClicked"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sincronização / Offline -->
+            <Border Padding="12" StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Sincronização / Offline" FontAttributes="Bold"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Modo Offline"/>
+                        <Switch IsToggled="True"/>
+                    </Grid>
+                    <Button Text="Sincronizar agora"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

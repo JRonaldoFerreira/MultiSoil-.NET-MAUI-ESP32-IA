@@ -1,0 +1,27 @@
+<ContentPage x:Class="MultiSoil_EdgeAI.Views.TalhaoFormPage"
+xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+xmlns:beh="clr-namespace:MultiSoil_EdgeAI.Behaviors"
+xmlns:vm="clr-namespace:MultiSoil_EdgeAI.ViewModels"
+Title="Talhão">
+
+    <ContentPage.Behaviors>
+        <beh:AuthGuardBehavior />
+    </ContentPage.Behaviors>
+    
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+            <Entry Placeholder="Nome" Text="{Binding Item.Nome}"/>
+            <Entry Placeholder="Cultura" Text="{Binding Item.Cultura}"/>
+            <Entry Keyboard="Numeric" Placeholder="Área (ha)" Text="{Binding Item.AreaHa}"/>
+            <Entry Keyboard="Numeric" Placeholder="Latitude" Text="{Binding Item.Latitude}"/>
+            <Entry Keyboard="Numeric" Placeholder="Longitude" Text="{Binding Item.Longitude}"/>
+            <DatePicker Date="{Binding Item.DataPlantio}"/>
+            <Picker Title="Status"
+        ItemsSource="{Binding StatusOptions}"
+        SelectedItem="{Binding Item.Status}" />
+            <Button Text="Salvar" Command="{Binding SalvarCmd}"/>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

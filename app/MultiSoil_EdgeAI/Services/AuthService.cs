@@ -19,7 +19,7 @@ public class AuthService : IAuthService
         var res = await _users.AuthenticateAsync(email.Trim().ToLowerInvariant(), password);
         if (res.Success && res.User is not null)
             await _session.StartAsync(res.User.Id, res.User.Email,
-                          ttl: TimeSpan.FromSeconds(8),
+                          ttl: TimeSpan.FromSeconds(400),
                           sliding: true);
         return res;
     }
@@ -29,7 +29,7 @@ public class AuthService : IAuthService
         try
         {
             var user = await _users.CreateAsync(email.Trim().ToLowerInvariant(), password);
-            await _session.StartAsync(user.Id, user.Email, ttl: TimeSpan.FromSeconds(10), sliding: false);
+            await _session.StartAsync(user.Id, user.Email, ttl: TimeSpan.FromSeconds(400), sliding: false);
             return AuthResult.Ok(user);
         }
         catch (Exception ex)

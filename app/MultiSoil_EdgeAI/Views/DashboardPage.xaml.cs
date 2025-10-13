@@ -1,39 +1,49 @@
+using MultiSoil_EdgeAI.Models;
 using MultiSoil_EdgeAI.Services;
 using MultiSoil_EdgeAI.Utils;
 
 namespace MultiSoil_EdgeAI.Views;
 
-public partial class DashboardPage : ContentPage //resolvndo a issue do login 15
+public partial class DashboardPage : ContentPage
 {
-    ISessionService Session => ServiceHelper.GetService<ISessionService>();
-    IAuthService Auth => ServiceHelper.GetService<IAuthService>();
-
-    CancellationTokenSource? _hudCts;
+    private ITalhaoService Talhoes => ServiceHelper.GetService<ITalhaoService>();
 
     public DashboardPage()
     {
-        InitializeComponent();
-       
-        Disappearing += OnDisappearing;
+        InitializeComponent(); // <-- só funciona se XAML + namespace/classe estiverem idênticos
     }
 
-    
-    void OnDisappearing(object? s, EventArgs e) { _hudCts?.Cancel(); _hudCts = null; }
-
-    // Botão: renova o TTL agora
-    private async void OnKeepAliveClicked(object sender, EventArgs e)
+    protected override async void OnAppearing()
     {
-        await Session.TouchAsync();
+        base.OnAppearing();
 
-        
+        var lista = await Talhoes.ListAsync();
+        TalhaoPicker.ItemsSource = lista;
+        TalhaoPicker.ItemDisplayBinding = new Binding(nameof(Talhao.Nome));
+
+        var activeId = Talhoes.GetActiveId();
+        var active = activeId is int id ? lista.FirstOrDefault(x => x.Id == id) : null;
+        TalhaoPicker.SelectedItem = active ?? lista.FirstOrDefault();
+
+        TalhaoPicker.SelectedIndexChanged -= OnTalhaoChanged;
+        TalhaoPicker.SelectedIndexChanged += OnTalhaoChanged;
     }
 
-    private async void OnLogoutClicked(object sender, EventArgs e)
+    private async void OnTalhaoChanged(object? sender, EventArgs e)
     {
-        await Auth.LogoutAsync();
-        await Shell.Current.GoToAsync("///login");
+        if (TalhaoPicker.SelectedItem is Talhao t)
+            await Talhoes.SetActiveAsync(t.Id);
     }
 
-    // HUD: mostra o tempo restante atualizando a cada 1s
- 
+    private async void OnNovoTalhaoClicked(object sender, EventArgs e)
+        => await Shell.Current.GoToAsync("talhoes");
+
+    private async void OnLeiturasClicked(object sender, EventArgs e)
+        => await DisplayAlert("Leituras", "Abrir tela de leituras em tempo real…", "OK");
+
+    private async void OnHistoricoClicked(object sender, EventArgs e)
+        => await DisplayAlert("Histórico", "Abrir histórico do talhão ativo…", "OK");
+
+    private async void OnPrevisoesClicked(object sender, EventArgs e)
+        => await DisplayAlert("Previsões", "Abrir previsões…", "OK");
 }
