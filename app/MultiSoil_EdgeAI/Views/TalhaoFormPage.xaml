@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MultiSoil_EdgeAI.Views.TalhaoFormPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Talhão">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Salvar" Clicked="OnSaveClicked" Priority="0"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+            <Entry x:Name="NomeEntry" Placeholder="Nome" />
+            <Entry x:Name="CulturaEntry" Placeholder="Cultura" />
+            <Entry x:Name="AreaEntry" Placeholder="Área (ha)" Keyboard="Numeric"/>
+            <Entry x:Name="LatEntry" Placeholder="Latitude" Keyboard="Numeric"/>
+            <Entry x:Name="LonEntry" Placeholder="Longitude" Keyboard="Numeric"/>
+            <Entry x:Name="MicroEntry" Placeholder="Microcontrolador (ex.: ESP32)"/>
+            <Button Text="Cancelar" Clicked="OnCancelClicked"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

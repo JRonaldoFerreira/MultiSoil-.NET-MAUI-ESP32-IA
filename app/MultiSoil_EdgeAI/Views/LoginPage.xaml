@@ -28,22 +28,19 @@
                 <Label Text="MultiSoil EdgeAI" FontSize="20" FontAttributes="Bold"/>
                 <HorizontalStackLayout Spacing="6">
                     <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#16A34A" VerticalOptions="Center"/>
-                    <Label Text="ESP32 Online • 120ms" FontSize="12" TextColor="#16A34A"/>
+                    <Label Text="SEU MULTISENSOR INTELIGENTE" FontSize="12" TextColor="#16A34A"/>
                 </HorizontalStackLayout>
             </VerticalStackLayout>
 
-            <!-- Menu fictício (tabs da Shell cuidam da navegação após login) -->
-            <HorizontalStackLayout Grid.Column="1" Spacing="12">
-                <Label Text="Dashboard" TextDecorations="Underline" IsVisible="False"/>
-                <Label Text="Leituras" IsVisible="False"/>
-                <Label Text="Histórico" IsVisible="False"/>
-                <Label Text="Previsão" IsVisible="False"/>
-            </HorizontalStackLayout>
+           
         </Grid>
+
+        
 
         <!-- Card de login -->
         <Frame Grid.Row="1" Padding="20" Margin="0,20" HasShadow="True" CornerRadius="14" BackgroundColor="{AppThemeBinding Light=White, Dark=#111315}">
-            <VerticalStackLayout Spacing="10">
+            <ScrollView>
+                <VerticalStackLayout Spacing="10">
                 <HorizontalStackLayout>
                     <Image Source="dotnet_bot.png" HeightRequest="20" WidthRequest="20" IsVisible="False"/>
                     <Label Text="Entrar" FontSize="18" FontAttributes="Bold"/>
@@ -68,6 +65,14 @@
                 <Label Style="{StaticResource Hint}"
                        Text="Ao autenticar, conexão com API ESP32 será iniciada automaticamente."/>
             </VerticalStackLayout>
+        </ScrollView>
         </Frame>
+
+        
+        
+        
     </Grid>
+
+
+    
 </ContentPage>

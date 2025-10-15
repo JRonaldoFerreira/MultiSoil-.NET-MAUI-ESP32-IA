@@ -11,10 +11,23 @@
     <VerticalStackLayout Padding="20" Spacing="12">
         <Label Text="Dashboard" FontSize="24" FontAttributes="Bold"/>
 
-        <!-- Botão que renova o TTL na hora -->
-        <Button Text="Estou ativo (renovar sessão)" Clicked="OnKeepAliveClicked"/>
+        <Button Text="Estou ativo (renovar sessão)"
+                Command="{Binding KeepAliveCommand}" />
 
- 
-        <Button Text="Logout" Clicked="OnLogoutClicked"/>
+        <Frame Padding="12" BorderColor="{DynamicResource SecondaryColor}">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Talhão selecionado:" FontAttributes="Bold"/>
+                <Label Text="{Binding SelectedTalhaoTitle}" />
+                <HorizontalStackLayout Spacing="8">
+                    <Button Text="Selecionar Talhão"
+                            Command="{Binding SelectTalhaoCommand}" />
+                    <Button Text="Ver dados em tempo real"
+                            Command="{Binding RealtimeCommand}"
+                            IsEnabled="{Binding IsRealtimeEnabled}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Frame>
+
+        <Button Text="Logout" Command="{Binding LogoutCommand}" />
     </VerticalStackLayout>
 </ContentPage>

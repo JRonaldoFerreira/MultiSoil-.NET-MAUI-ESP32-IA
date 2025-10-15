@@ -19,6 +19,7 @@ public sealed class LocalDb
     public async Task InitializeAsync()
     {
         await _conn.CreateTableAsync<User>();
+        await _conn.CreateTableAsync<Models.Talhao>();
         await SeedAsync();
     }
 

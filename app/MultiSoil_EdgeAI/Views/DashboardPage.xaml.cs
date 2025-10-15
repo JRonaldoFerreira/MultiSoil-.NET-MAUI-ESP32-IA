@@ -1,39 +1,22 @@
-using MultiSoil_EdgeAI.Services;
+// Views/DashboardPage.xaml.cs
 using MultiSoil_EdgeAI.Utils;
+using MultiSoil_EdgeAI.ViewModels;
 
 namespace MultiSoil_EdgeAI.Views;
 
-public partial class DashboardPage : ContentPage //resolvndo a issue do login 15
+public partial class DashboardPage : ContentPage
 {
-    ISessionService Session => ServiceHelper.GetService<ISessionService>();
-    IAuthService Auth => ServiceHelper.GetService<IAuthService>();
-
-    CancellationTokenSource? _hudCts;
+    private readonly DashboardViewModel _vm = ServiceHelper.GetService<DashboardViewModel>();
 
     public DashboardPage()
     {
         InitializeComponent();
-       
-        Disappearing += OnDisappearing;
+        BindingContext = _vm;
     }
 
-    
-    void OnDisappearing(object? s, EventArgs e) { _hudCts?.Cancel(); _hudCts = null; }
-
-    // Botão: renova o TTL agora
-    private async void OnKeepAliveClicked(object sender, EventArgs e)
+    protected override async void OnAppearing()
     {
-        await Session.TouchAsync();
-
-        
+        base.OnAppearing();
+        await _vm.OnAppearingAsync();
     }
-
-    private async void OnLogoutClicked(object sender, EventArgs e)
-    {
-        await Auth.LogoutAsync();
-        await Shell.Current.GoToAsync("///login");
-    }
-
-    // HUD: mostra o tempo restante atualizando a cada 1s
- 
 }

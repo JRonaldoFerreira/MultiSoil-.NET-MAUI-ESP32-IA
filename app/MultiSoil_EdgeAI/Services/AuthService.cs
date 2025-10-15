@@ -8,6 +8,8 @@ public class AuthService : IAuthService
     private readonly IUserRepository _users;
     private readonly ISessionService _session;
 
+    public Task<int?> GetCurrentUserIdAsync() => _session.GetCurrentUserIdAsync();
+
     public AuthService(IUserRepository users, ISessionService session)
     {
         _users = users;
@@ -19,7 +21,7 @@ public class AuthService : IAuthService
         var res = await _users.AuthenticateAsync(email.Trim().ToLowerInvariant(), password);
         if (res.Success && res.User is not null)
             await _session.StartAsync(res.User.Id, res.User.Email,
-                          ttl: TimeSpan.FromSeconds(8),
+                          ttl: TimeSpan.FromSeconds(10),
                           sliding: true);
         return res;
     }

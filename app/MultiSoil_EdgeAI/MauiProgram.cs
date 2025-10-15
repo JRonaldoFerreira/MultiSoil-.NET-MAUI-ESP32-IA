@@ -25,6 +25,8 @@ public static class MauiProgram
         // DI: Database + Repos + Services
         builder.Services.AddSingleton<LocalDb>();
         builder.Services.AddSingleton<IUserRepository, SqliteUserRepository>();
+        builder.Services.AddSingleton<ITalhaoSelectionService, TalhaoSelectionService>();
+        builder.Services.AddSingleton<ITalhaoRepository, SqliteTalhaoRepository>();
         builder.Services.AddSingleton<ISessionService, SessionService>();
         builder.Services.AddSingleton<IAuthService, AuthService>();
 
@@ -32,16 +34,22 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<RegisterViewModel>();
         builder.Services.AddTransient<ReauthViewModel>();
+        builder.Services.AddTransient<DashboardViewModel>();
 
         // Views
-        
+
 
         // Views
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<ReauthPage>();
         builder.Services.AddTransient<RegisterPage>();
         builder.Services.AddTransient<DashboardPage>();
-        
+
+        // Views
+        builder.Services.AddTransient<TalhoesPage>();
+        builder.Services.AddTransient<TalhaoFormPage>();
+        builder.Services.AddTransient<RealtimePage>();
+
         var app = builder.Build();
         ServiceHelper.Initialize(app.Services);
         return app;
