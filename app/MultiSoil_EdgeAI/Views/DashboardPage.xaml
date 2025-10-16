@@ -11,9 +11,6 @@
     <VerticalStackLayout Padding="20" Spacing="12">
         <Label Text="Dashboard" FontSize="24" FontAttributes="Bold"/>
 
-        <Button Text="Estou ativo (renovar sessão)"
-                Command="{Binding KeepAliveCommand}" />
-
         <Frame Padding="12" BorderColor="{DynamicResource SecondaryColor}">
             <VerticalStackLayout Spacing="8">
                 <Label Text="Talhão selecionado:" FontAttributes="Bold"/>
