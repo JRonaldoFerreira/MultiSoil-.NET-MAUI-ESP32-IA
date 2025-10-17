@@ -67,7 +67,7 @@ public partial class HistoricosViewModel : ObservableObject
 
     [RelayCommand]
     private Task Load() => LoadAsync();
-
+   
     private async Task LoadAsync()
     {
         Items.Clear();
