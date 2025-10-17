@@ -2,9 +2,20 @@
 <?xaml-comp compile="true" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
+
+    <!-- Cores do Dashboard (tema claro/escuro via CommunityToolkit) -->
+    <toolkit:AppThemeColor x:Key="PrimaryColor"   Light="#2563EB" Dark="#3B82F6" />
+    <toolkit:AppThemeColor x:Key="OnPrimaryColor" Light="#FFFFFF" Dark="#0B1220" />
+    <toolkit:AppThemeColor x:Key="SurfaceColor"   Light="#F6F7FB" Dark="#111315" />
+    <toolkit:AppThemeColor x:Key="CardColor"      Light="#FFFFFF" Dark="#1E2226" />
+    <toolkit:AppThemeColor x:Key="SecondaryColor" Light="#E5E7EB" Dark="#2A2F36" />
+
+    <!-- Cor estática -->
+    <Color x:Key="MutedText">#8892A6</Color>
 
     <Color x:Key="Primary">#512BD4</Color>
     <Color x:Key="PrimaryDark">#ac99ea</Color>

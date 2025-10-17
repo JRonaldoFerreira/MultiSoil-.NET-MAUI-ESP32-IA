@@ -2,7 +2,103 @@
 <?xaml-comp compile="true" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+
+
+
+
+    <Style x:Key="H1" TargetType="Label">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{toolkit:AppThemeResource OnPrimaryColor}" />
+    </Style>
+
+    <Style x:Key="H2" TargetType="Label">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+    </Style>
+
+    <Style x:Key="Body" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=#1F2937, Dark=#E5E7EB}" />
+    </Style>
+
+    <!-- Botões -->
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{toolkit:AppThemeResource PrimaryColor}" />
+        <Setter Property="TextColor" Value="{toolkit:AppThemeResource OnPrimaryColor}" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Padding" Value="18,14" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Opacity="0.18" Offset="0,4" Radius="12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="OutlineButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{toolkit:AppThemeResource PrimaryColor}" />
+        <Setter Property="BorderColor" Value="{toolkit:AppThemeResource PrimaryColor}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="HeightRequest" Value="46" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="TertiaryButton" TargetType="Button" BasedOn="{StaticResource OutlineButton}">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=#EF4444, Dark=#F87171}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light=#EF4444, Dark=#F87171}" />
+    </Style>
+
+    <!-- Cartão -->
+    <Style x:Key="CardBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{toolkit:AppThemeResource CardColor}" />
+        <Setter Property="Stroke" Value="{toolkit:AppThemeResource SecondaryColor}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="14" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="18"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Opacity="0.14" Offset="0,6" Radius="16"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Campos de formulário (Login) -->
+    <Style x:Key="FormEntry" TargetType="Entry">
+        <Setter Property="HeightRequest" Value="44"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=#111827, Dark=#F3F4F6}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light=#9CA3AF, Dark=#6B7280}" />
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="FormFieldBorder" TargetType="Border">
+        <Setter Property="Stroke" Value="{toolkit:AppThemeResource SecondaryColor}" />
+        <Setter Property="BackgroundColor" Value="{toolkit:AppThemeResource CardColor}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Hint" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource MutedText}"/>
+    </Style>
+
 
     <Style TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
@@ -447,5 +543,7 @@
         <Setter Property="UnselectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray950}}" />
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
+    
+    
 
 </ResourceDictionary>
