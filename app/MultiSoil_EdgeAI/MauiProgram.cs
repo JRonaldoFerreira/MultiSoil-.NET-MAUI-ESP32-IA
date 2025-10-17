@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm;
+﻿
+using CommunityToolkit.Mvvm;
 using MultiSoil_EdgeAI.Data;
 using MultiSoil_EdgeAI.Interfaces;
 using MultiSoil_EdgeAI.Repositories;
@@ -6,6 +7,7 @@ using MultiSoil_EdgeAI.Services;
 using MultiSoil_EdgeAI.Utils;
 using MultiSoil_EdgeAI.ViewModels;
 using MultiSoil_EdgeAI.Views;
+using CommunityToolkit.Maui;
 
 namespace MultiSoil_EdgeAI;
 
@@ -16,6 +18,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -35,9 +38,6 @@ public static class MauiProgram
         builder.Services.AddTransient<RegisterViewModel>();
         builder.Services.AddTransient<ReauthViewModel>();
         builder.Services.AddTransient<DashboardViewModel>();
-
-        // Views
-
 
         // Views
         builder.Services.AddTransient<LoginPage>();

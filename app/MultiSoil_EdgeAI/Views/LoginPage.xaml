@@ -3,76 +3,206 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:MultiSoil_EdgeAI.ViewModels"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:conv="clr-namespace:MultiSoil_EdgeAI.Converters"
+    x:DataType="vm:LoginViewModel"
     Title="Login"
-    BackgroundColor="{AppThemeBinding Light=#F7F9F7, Dark=#0B0F0B}">
+    BackgroundColor="{toolkit:AppThemeResource SurfaceColor}">
 
+    <!-- ===== Behaviors/Converters (se já estiverem globais, pode remover daqui) ===== -->
     <ContentPage.Resources>
-        <Style TargetType="Entry">
-            <Setter Property="HeightRequest" Value="44"/>
-            <Setter Property="Margin" Value="0,8"/>
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="HeightRequest" Value="48"/>
-        </Style>
-        <Style TargetType="Label" x:Key="Hint">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="TextColor" Value="#6B7280"/>
-        </Style>
+        <ResourceDictionary>
+            <!-- Converters usados nos bindings -->
+            <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <conv:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter" />
+
+            <!-- Paleta consistente com o Dashboard -->
+            <toolkit:AppThemeColor x:Key="PrimaryColor"   Light="#2563EB" Dark="#3B82F6" />
+            <toolkit:AppThemeColor x:Key="OnPrimaryColor" Light="#FFFFFF" Dark="#0B1220" />
+            <toolkit:AppThemeColor x:Key="SurfaceColor"   Light="#F6F7FB" Dark="#111315" />
+            <toolkit:AppThemeColor x:Key="CardColor"      Light="#FFFFFF" Dark="#1E2226" />
+            <toolkit:AppThemeColor x:Key="SecondaryColor" Light="#E5E7EB" Dark="#2A2F36" />
+            <Color x:Key="MutedText">#8892A6</Color>
+
+            <!-- Tipografia -->
+            <Style x:Key="H1" TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{toolkit:AppThemeResource OnPrimaryColor}" />
+            </Style>
+
+            <Style x:Key="H2" TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light=#0F172A, Dark=#E5E7EB}" />
+            </Style>
+
+            <Style x:Key="Body" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light=#1F2937, Dark=#E5E7EB}" />
+            </Style>
+
+            <!-- Botões -->
+            <Style x:Key="PrimaryButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{toolkit:AppThemeResource PrimaryColor}" />
+                <Setter Property="TextColor" Value="{toolkit:AppThemeResource OnPrimaryColor}" />
+                <Setter Property="CornerRadius" Value="14" />
+                <Setter Property="Padding" Value="18,14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Opacity="0.18" Offset="0,4" Radius="12"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="OutlineButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{toolkit:AppThemeResource PrimaryColor}" />
+                <Setter Property="BorderColor" Value="{toolkit:AppThemeResource PrimaryColor}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="14" />
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="HeightRequest" Value="46" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <!-- Cards -->
+            <Style x:Key="CardBorder" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{toolkit:AppThemeResource CardColor}" />
+                <Setter Property="Stroke" Value="{toolkit:AppThemeResource SecondaryColor}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Padding" Value="18" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="18"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Opacity="0.14" Offset="0,6" Radius="16"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Campos de formulário -->
+            <Style x:Key="FormEntry" TargetType="Entry">
+                <Setter Property="HeightRequest" Value="44"/>
+                <Setter Property="TextColor" Value="{AppThemeBinding Light=#111827, Dark=#F3F4F6}" />
+                <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light=#9CA3AF, Dark=#6B7280}" />
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+            </Style>
+
+            <Style x:Key="FormFieldBorder" TargetType="Border">
+                <Setter Property="Stroke" Value="{toolkit:AppThemeResource SecondaryColor}" />
+                <Setter Property="BackgroundColor" Value="{toolkit:AppThemeResource CardColor}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Padding" Value="10,4" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="Hint" TargetType="Label">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="TextColor" Value="{StaticResource MutedText}"/>
+            </Style>
+        </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*" Padding="16,12">
-        <!-- Top bar -->
-        <Grid RowDefinitions="Auto" ColumnDefinitions="*,Auto" Padding="0,4" BackgroundColor="Transparent">
-            <VerticalStackLayout Grid.Column="0" Spacing="0">
-                <Label Text="MultiSoil EdgeAI" FontSize="20" FontAttributes="Bold"/>
+    <!-- ===== LAYOUT ===== -->
+    <Grid RowDefinitions="Auto,*" Padding="18" RowSpacing="16">
+
+        <!-- Header com gradiente (mesmo do dashboard) -->
+        <Border Grid.Row="0" Padding="20">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="22"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Opacity="0.20" Offset="0,8" Radius="18"/>
+            </Border.Shadow>
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="{toolkit:AppThemeResource PrimaryColor}" Offset="0" />
+                    <GradientStop Color="#7C3AED" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <VerticalStackLayout Spacing="6">
+                <Label Text="MultiSoil EdgeAI" Style="{StaticResource H1}" />
                 <HorizontalStackLayout Spacing="6">
-                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#16A34A" VerticalOptions="Center"/>
-                    <Label Text="SEU MULTISENSOR INTELIGENTE" FontSize="12" TextColor="#16A34A"/>
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4"
+                             Color="#16A34A" VerticalOptions="Center"/>
+                    <Label Text="SEU MULTISENSOR INTELIGENTE"
+                           FontSize="12"
+                           TextColor="{toolkit:AppThemeResource OnPrimaryColor}"
+                           Opacity="0.9"/>
                 </HorizontalStackLayout>
             </VerticalStackLayout>
+        </Border>
 
-           
-        </Grid>
-
-        
-
-        <!-- Card de login -->
-        <Frame Grid.Row="1" Padding="20" Margin="0,20" HasShadow="True" CornerRadius="14" BackgroundColor="{AppThemeBinding Light=White, Dark=#111315}">
+        <!-- Card de Login -->
+        <Border Grid.Row="1" Style="{StaticResource CardBorder}" Margin="0,8,0,0">
             <ScrollView>
-                <VerticalStackLayout Spacing="10">
-                <HorizontalStackLayout>
-                    <Image Source="dotnet_bot.png" HeightRequest="20" WidthRequest="20" IsVisible="False"/>
-                    <Label Text="Entrar" FontSize="18" FontAttributes="Bold"/>
-                </HorizontalStackLayout>
+                <VerticalStackLayout Spacing="14">
 
-                <Label Text="Email" />
-                <Entry Text="{Binding Email}" Placeholder="ana@example.com" Keyboard="Email" />
+                    <Label Text="Entrar" Style="{StaticResource H2}" />
 
-                <Label Text="Senha" />
-                <Entry Text="{Binding Password}" IsPassword="True" Placeholder="••••••••" />
+                    <!-- Email -->
+                    <Label Text="Email" Style="{StaticResource Body}" />
+                    <Border Style="{StaticResource FormFieldBorder}">
+                        <Entry
+                            Style="{StaticResource FormEntry}"
+                            Text="{Binding Email}"
+                            Placeholder="ana@example.com"
+                            Keyboard="Email" />
+                    </Border>
 
-                <Button Text="Entrar" Command="{Binding EntrarCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}, FallbackValue=True}" />
+                    <!-- Senha -->
+                    <Label Text="Senha" Style="{StaticResource Body}" />
+                    <Border Style="{StaticResource FormFieldBorder}">
+                        <Entry
+                            Style="{StaticResource FormEntry}"
+                            Text="{Binding Password}"
+                            IsPassword="True"
+                            Placeholder="••••••••" />
+                    </Border>
 
-                <Label Text="{Binding ErrorMessage}" TextColor="#DC2626" IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotNullOrEmptyConverter}}" />
+                    <!-- Ações -->
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <Button
+                            Grid.Column="0"
+                            Text="Entrar"
+                            Style="{StaticResource PrimaryButton}"
+                            Command="{Binding EntrarCommand}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}, FallbackValue=True}" />
 
-                <Label Text="Criar conta" TextColor="#2563EB">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding IrParaCadastroCommand}" NumberOfTapsRequired="1"/>
-                    </Label.GestureRecognizers>
-                </Label>
+                        <ActivityIndicator
+                            Grid.Column="1"
+                            IsRunning="{Binding IsBusy}"
+                            IsVisible="{Binding IsBusy}" />
+                    </Grid>
 
-                <Label Style="{StaticResource Hint}"
-                       Text="Ao autenticar, conexão com API ESP32 será iniciada automaticamente."/>
-            </VerticalStackLayout>
-        </ScrollView>
-        </Frame>
+                    <!-- Mensagens -->
+                    <Label
+                        Text="{Binding ErrorMessage}"
+                        TextColor="#DC2626"
+                        IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotNullOrEmptyConverter}}" />
 
-        
-        
-        
+                    <!-- Link de cadastro -->
+                    <Label Text="Criar conta" TextDecorations="Underline" TextColor="#2563EB">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding IrParaCadastroCommand}" NumberOfTapsRequired="1"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label Style="{StaticResource Hint}"
+                           Text="Ao autenticar, a conexão com a API do ESP32 inicia automaticamente."/>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Border>
     </Grid>
-
-
-    
 </ContentPage>

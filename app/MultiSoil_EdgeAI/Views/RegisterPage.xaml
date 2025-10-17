@@ -7,7 +7,7 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="10">
-            <Label Text="Criar conta" FontAttributes="Bold" FontSize="20"/>
+            <Label  FontAttributes="Bold" FontSize="20"/>
             <Entry Placeholder="email@dominio.com" Keyboard="Email" Text="{Binding Email}"/>
             <Entry Placeholder="Senha" IsPassword="True" Text="{Binding Password}"/>
             <Entry Placeholder="Confirmar Senha" IsPassword="True" Text="{Binding ConfirmPassword}"/>
