@@ -1,21 +1,61 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+<?xaml-comp compile="true" ?>
 <ContentPage x:Class="MultiSoil_EdgeAI.Views.TalhaoFormPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="Talhão">
+
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Salvar" Clicked="OnSaveClicked" Priority="0"/>
+        <ToolbarItem Text="Salvar" Clicked="OnSaveClicked" Priority="0" />
     </ContentPage.ToolbarItems>
 
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="12">
-            <Entry x:Name="NomeEntry" Placeholder="Nome" />
-            <Entry x:Name="CulturaEntry" Placeholder="Cultura" />
-            <Entry x:Name="AreaEntry" Placeholder="Área (ha)" Keyboard="Numeric"/>
-            <Entry x:Name="LatEntry" Placeholder="Latitude" Keyboard="Numeric"/>
-            <Entry x:Name="LonEntry" Placeholder="Longitude" Keyboard="Numeric"/>
-            <Entry x:Name="MicroEntry" Placeholder="Microcontrolador (ex.: ESP32)"/>
-            <Button Text="Cancelar" Clicked="OnCancelClicked"/>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <Label Text="Talhão" Style="{StaticResource H1}" />
+
+            <Border Style="{StaticResource FormFieldBorder}">
+                <Entry x:Name="NomeEntry"
+                       Style="{StaticResource FormEntry}"
+                       Placeholder="Nome" />
+            </Border>
+
+            <Border Style="{StaticResource FormFieldBorder}">
+                <Entry x:Name="CulturaEntry"
+                       Style="{StaticResource FormEntry}"
+                       Placeholder="Cultura" />
+            </Border>
+
+            <Border Style="{StaticResource FormFieldBorder}">
+                <Entry x:Name="AreaEntry"
+                       Style="{StaticResource FormEntry}"
+                       Placeholder="Área (ha)"
+                       Keyboard="Numeric" />
+            </Border>
+
+            <Border Style="{StaticResource FormFieldBorder}">
+                <Entry x:Name="LatEntry"
+                       Style="{StaticResource FormEntry}"
+                       Placeholder="Latitude"
+                       Keyboard="Numeric" />
+            </Border>
+
+            <Border Style="{StaticResource FormFieldBorder}">
+                <Entry x:Name="LonEntry"
+                       Style="{StaticResource FormEntry}"
+                       Placeholder="Longitude"
+                       Keyboard="Numeric" />
+            </Border>
+
+            <Border Style="{StaticResource FormFieldBorder}">
+                <Entry x:Name="MicroEntry"
+                       Style="{StaticResource FormEntry}"
+                       Placeholder="Microcontrolador (ex.: ESP32)" />
+            </Border>
+
+            <Button Text="Cancelar"
+                    Style="{StaticResource OutlineButton}"
+                    Clicked="OnCancelClicked" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

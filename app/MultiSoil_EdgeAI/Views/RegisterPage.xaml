@@ -1,18 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xaml-comp compile="true" ?>
 <ContentPage
     x:Class="MultiSoil_EdgeAI.Views.RegisterPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:vm="clr-namespace:MultiSoil_EdgeAI.ViewModels"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     Title="Criar conta">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="10">
-            <Label  FontAttributes="Bold" FontSize="20"/>
-            <Entry Placeholder="email@dominio.com" Keyboard="Email" Text="{Binding Email}"/>
-            <Entry Placeholder="Senha" IsPassword="True" Text="{Binding Password}"/>
-            <Entry Placeholder="Confirmar Senha" IsPassword="True" Text="{Binding ConfirmPassword}"/>
-            <Button Text="Registrar" Command="{Binding RegistrarCommand}"/>
-            <Label Text="{Binding ErrorMessage}" TextColor="Red"/>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label Text="Criar conta" Style="{StaticResource H1}" />
+
+            <Border Style="{StaticResource FormFieldBorder}">
+                <Entry
+                    Style="{StaticResource FormEntry}"
+                    Placeholder="email@dominio.com"
+                    Keyboard="Email"
+                    Text="{Binding Email}" />
+            </Border>
+
+            <Border Style="{StaticResource FormFieldBorder}">
+                <Entry
+                    Style="{StaticResource FormEntry}"
+                    Placeholder="Senha"
+                    IsPassword="True"
+                    Text="{Binding Password}" />
+            </Border>
+
+            <Border Style="{StaticResource FormFieldBorder}">
+                <Entry
+                    Style="{StaticResource FormEntry}"
+                    Placeholder="Confirmar Senha"
+                    IsPassword="True"
+                    Text="{Binding ConfirmPassword}" />
+            </Border>
+
+            <Button
+                Text="Registrar"
+                Style="{StaticResource PrimaryButton}"
+                Command="{Binding RegistrarCommand}" />
+
+            <Label
+                Text="{Binding ErrorMessage}"
+                Style="{StaticResource Body}"
+                TextColor="{AppThemeBinding Light=#EF4444, Dark=#F87171}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

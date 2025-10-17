@@ -1,31 +1,91 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
 <ContentPage x:Class="MultiSoil_EdgeAI.Views.TalhoesPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Talhões">
+
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Adicionar" Clicked="OnAddClicked" Priority="0"/>
+        <ToolbarItem Text="Adicionar"
+                     Priority="0"
+                     Clicked="OnAddClicked" />
     </ContentPage.ToolbarItems>
 
     <VerticalStackLayout Padding="16" Spacing="12">
-        <CollectionView x:Name="ListView" SelectionMode="Single" SelectionChanged="OnSelectionChanged">
+
+        <CollectionView x:Name="ListView"
+                        SelectionMode="Single"
+                        SelectionChanged="OnSelectionChanged"
+                        ItemsLayout="VerticalList">
+
+            <CollectionView.EmptyView>
+                <Label Text="Nenhum talhão cadastrado."
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Style="{StaticResource Hint}" />
+            </CollectionView.EmptyView>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
+
                         <SwipeView.RightItems>
                             <SwipeItems Mode="Execute">
-                                <SwipeItem Text="Editar" Invoked="OnEditSwipe" BackgroundColor="{DynamicResource SecondaryColor}"/>
-                                <SwipeItem Text="Excluir" Invoked="OnDeleteSwipe" BackgroundColor="{DynamicResource ErrorColor}"/>
+                                <SwipeItem Text="Editar"
+                                           Invoked="OnEditSwipe"
+                                           BackgroundColor="{toolkit:AppThemeResource PrimaryColor}" />
+                                <SwipeItem Text="Excluir"
+                                           Invoked="OnDeleteSwipe"
+                                           BackgroundColor="{AppThemeBinding Light=#EF4444, Dark=#F87171}" />
                             </SwipeItems>
                         </SwipeView.RightItems>
-                        <Grid Padding="12" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-                            <Label Grid.Row="0" Text="{Binding Nome}" FontAttributes="Bold" />
-                            <Label Grid.Row="1" Text="{Binding Cultura}" FontSize="12" Opacity="0.7"/>
-                            <Label Grid.Column="1" Grid.RowSpan="2" Text="{Binding Microcontrolador}" VerticalOptions="Center" FontSize="12"/>
-                        </Grid>
+
+                        <Border Style="{StaticResource CardBorder}">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnSpacing="12"
+                                  RowSpacing="4"
+                                  Padding="0">
+
+                                <!-- Nome -->
+                                <Label Grid.Row="0"
+                                       Grid.Column="0"
+                                       Text="{Binding Nome}"
+                                       Style="{StaticResource H2}" />
+
+                                <!-- Cultura -->
+                                <Label Grid.Row="1"
+                                       Grid.Column="0"
+                                       Text="{Binding Cultura}"
+                                       Style="{StaticResource Body}"
+                                       Opacity="0.85" />
+
+                                <!-- Microcontrolador (chip) -->
+                                <Border Grid.Row="0"
+                                        Grid.Column="1"
+                                        Grid.RowSpan="2"
+                                        Padding="8,4"
+                                        Stroke="{toolkit:AppThemeResource SecondaryColor}"
+                                        BackgroundColor="{toolkit:AppThemeResource CardColor}"
+                                        StrokeThickness="1">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="{Binding Microcontrolador}"
+                                           Style="{StaticResource Body}"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center"
+                                           Opacity="0.9" />
+                                </Border>
+
+                            </Grid>
+                        </Border>
+
                     </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
     </VerticalStackLayout>
 </ContentPage>
