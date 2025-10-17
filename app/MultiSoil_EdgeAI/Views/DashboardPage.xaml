@@ -12,69 +12,102 @@
         <beh:AuthGuardBehavior/>
     </ContentPage.Behaviors>
 
-    <!-- ===== LAYOUT ===== -->
+    <ScrollView>
+
+        <!-- ===== LAYOUT ===== -->
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*"
           Padding="18"
           RowSpacing="16">
+       
 
-        <!-- Header com gradiente -->
-        <Border Grid.Row="0" Padding="20">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="22"/>
-            </Border.StrokeShape>
-            <Border.Shadow>
-                <Shadow Opacity="0.20" Offset="0,8" Radius="18"/>
-            </Border.Shadow>
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="{toolkit:AppThemeResource PrimaryColor}" Offset="0" />
-                    <GradientStop Color="#7C3AED" Offset="1" />
-                </LinearGradientBrush>
-            </Border.Background>
+            <!-- Header com gradiente -->
+            <Border Grid.Row="0" Padding="20">
 
-            <VerticalStackLayout Spacing="6">
-                <Label Text="Dashboard" Style="{StaticResource H1}" />
-                <Label Text="Visão geral do MultiSoil EdgeAI"
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="22"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Opacity="0.20" Offset="0,8" Radius="18"/>
+                </Border.Shadow>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="{toolkit:AppThemeResource PrimaryColor}" Offset="0" />
+                        <GradientStop Color="#7C3AED" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Background>
+
+
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Dashboard" Style="{StaticResource H1}" />
+                    <Label Text="Visão geral do MultiSoil EdgeAI"
                        FontSize="13"
                        TextColor="{toolkit:AppThemeResource OnPrimaryColor}"
                        Opacity="0.85"/>
-            </VerticalStackLayout>
-        </Border>
+                </VerticalStackLayout>
+            </Border>
 
-        <!-- Card: Talhão selecionado -->
-        <Border Grid.Row="2" Style="{StaticResource CardBorder}">
-            <VerticalStackLayout Spacing="10">
-                <Label Text="Talhão selecionado" Style="{StaticResource H2}" />
-                <Label Text="{Binding SelectedTalhaoTitle}"
+            <!-- Card: Talhão selecionado -->
+            <Border Grid.Row="2" Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Talhão selecionado" Style="{StaticResource H2}" />
+                    <Label Text="{Binding SelectedTalhaoTitle}"
                        Style="{StaticResource Body}"
                        TextColor="{AppThemeBinding Light=#111827, Dark=#F3F4F6}" />
 
-                <Grid ColumnDefinitions="*,*"
+                    <Grid ColumnDefinitions="*,*"
                       ColumnSpacing="10"
                       Margin="0,6,0,0">
-                    <Button Grid.Column="0"
+                        <Button Grid.Column="0"
                             Text="Selecionar Talhão"
                             Style="{StaticResource OutlineButton}"
                             Command="{Binding SelectTalhaoCommand}" />
 
-                    <Button Grid.Column="1"
+                        <Button Grid.Column="1"
                             Text="Ver dados em tempo real"
                             Style="{StaticResource PrimaryButton}"
                             Command="{Binding RealtimeCommand}"
                             IsEnabled="{Binding IsRealtimeEnabled}" />
-                </Grid>
+                    </Grid>
 
-                <Label Text="Use o botão acima para mudar o talhão ou abrir a telemetria em tempo real."
+                    <Label Text="Use o botão acima para mudar o talhão ou abrir a telemetria em tempo real."
                        FontSize="12"
                        TextColor="{StaticResource MutedText}"
                        Margin="0,6,0,0"/>
-            </VerticalStackLayout>
-        </Border>
+                </VerticalStackLayout>
+            </Border>
+            <Border Grid.Row="3" Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Histórico" Style="{StaticResource H2}" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Grid.Column="0"
+                    Text="Ver histórico"
+                    Style="{StaticResource OutlineButton}"
+                    Command="{Binding AbrirHistoricoCommand}" />
+                        <Button Grid.Column="1"
+                    Text="Novo registro"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding NovoRegistroHistoricoCommand}" />
+                    </Grid>
+                    <Label Text="Gerencie coletas (NPK, pH, CE, temperatura e umidade) para relatórios."
+               FontSize="12"
+               TextColor="{StaticResource MutedText}"
+               Margin="0,6,0,0"/>
+                </VerticalStackLayout>
 
-        <!-- Logout -->
-        <Button Grid.Row="3"
-                Text="Logout"
-                Style="{StaticResource TertiaryButton}"
-                Command="{Binding LogoutCommand}" />
+            </Border>
+
+            <!-- Logout -->
+            <Button Grid.Row="4"
+        Text="Logout"
+        Style="{StaticResource TertiaryButton}"
+        Command="{Binding LogoutCommand}" />
+
+        
+
     </Grid>
+
+    </ScrollView>
+
+
 </ContentPage>

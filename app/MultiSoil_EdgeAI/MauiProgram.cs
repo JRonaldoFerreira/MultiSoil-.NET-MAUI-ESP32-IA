@@ -1,5 +1,8 @@
-﻿
-using CommunityToolkit.Mvvm;
+﻿// MauiProgram.cs
+using System;
+using CommunityToolkit.Maui;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Hosting;
 using MultiSoil_EdgeAI.Data;
 using MultiSoil_EdgeAI.Interfaces;
 using MultiSoil_EdgeAI.Repositories;
@@ -7,7 +10,9 @@ using MultiSoil_EdgeAI.Services;
 using MultiSoil_EdgeAI.Utils;
 using MultiSoil_EdgeAI.ViewModels;
 using MultiSoil_EdgeAI.Views;
-using CommunityToolkit.Maui;
+using Microsoft.Extensions.DependencyInjection; // <- necessário para AddHttpClient
+
+
 
 namespace MultiSoil_EdgeAI;
 
@@ -16,6 +21,7 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
+
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
@@ -25,27 +31,38 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        // DI: Database + Repos + Services
-        builder.Services.AddSingleton<LocalDb>();
-        builder.Services.AddSingleton<IUserRepository, SqliteUserRepository>();
-        builder.Services.AddSingleton<ITalhaoSelectionService, TalhaoSelectionService>();
-        builder.Services.AddSingleton<ITalhaoRepository, SqliteTalhaoRepository>();
-        builder.Services.AddSingleton<ISessionService, SessionService>();
-        builder.Services.AddSingleton<IAuthService, AuthService>();
+        // HTTP client para buscar leituras no servidor (ajuste a URL!)
+        builder.Services.AddHttpClient<ISensorReadingService, SensorReadingService>(client =>
+        {
+            client.BaseAddress = new Uri("https://seu-servidor.exemplo/"); // ajuste
+        });
 
-        // ViewModels
+        // ========= Infra e Serviços =========
+        builder.Services.AddSingleton<LocalDb>();                                  // DB local (estado compartilhado)
+        builder.Services.AddSingleton<ISessionService, SessionService>();          // sessão/autenticação
+        builder.Services.AddSingleton<IAuthService, AuthService>();
+        builder.Services.AddSingleton<ITalhaoSelectionService, TalhaoSelectionService>(); // seleção de talhão atual
+
+        // ========= Repositórios (acesso a dados) =========
+        builder.Services.AddTransient<IUserRepository, SqliteUserRepository>();
+        builder.Services.AddTransient<ITalhaoRepository, SqliteTalhaoRepository>();
+        builder.Services.AddTransient<IHistoricoRepository, SqliteHistoricoRepository>();
+
+        // ========= ViewModels =========
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<RegisterViewModel>();
         builder.Services.AddTransient<ReauthViewModel>();
         builder.Services.AddTransient<DashboardViewModel>();
+        builder.Services.AddTransient<HistoricosViewModel>();
+        builder.Services.AddTransient<HistoricoFormViewModel>();
 
-        // Views
+        // ========= Views =========
         builder.Services.AddTransient<LoginPage>();
-        builder.Services.AddTransient<ReauthPage>();
         builder.Services.AddTransient<RegisterPage>();
+        builder.Services.AddTransient<ReauthPage>();
         builder.Services.AddTransient<DashboardPage>();
-
-        // Views
+        builder.Services.AddTransient<HistoricosPage>();
+        builder.Services.AddTransient<HistoricoFormPage>();
         builder.Services.AddTransient<TalhoesPage>();
         builder.Services.AddTransient<TalhaoFormPage>();
         builder.Services.AddTransient<RealtimePage>();

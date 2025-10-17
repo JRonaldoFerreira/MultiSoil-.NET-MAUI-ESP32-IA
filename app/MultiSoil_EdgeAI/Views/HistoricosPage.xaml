@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<?xaml-comp compile="true" ?>
+<ContentPage x:Class="MultiSoil_EdgeAI.Views.HistoricosPage"
+             x:Name="Page"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MultiSoil_EdgeAI.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="vm:HistoricosViewModel"
+             Title="Histórico">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Adicionar" Priority="0" Command="{Binding AddCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <VerticalStackLayout Padding="16" Spacing="12">
+
+        <!-- dentro do DataTemplate (x:DataType="vm:HistoricoRow") -->
+        <Border Style="{StaticResource CardBorder}">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="4">
+                <Label Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding DataColeta, StringFormat='{}{0:dd/MM/yyyy}'}" Style="{StaticResource H2}"/>
+                <Label Grid.Row="1" Grid.Column="0" Text="{Binding IntervaloText}" Style="{StaticResource Body}" />
+                <Label Grid.Row="1" Grid.Column="1" Text="{Binding TalhaoNome}" Style="{StaticResource Body}" HorizontalTextAlignment="End" />
+                <Label Grid.Row="2" Grid.ColumnSpan="2"
+       Text="{Binding ResumoText}"
+       Style="{StaticResource Body}" />
+            </Grid>
+        </Border>
+
+
+        <Border Style="{StaticResource CardBorder}">
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="8">
+                <Label Grid.Row="0" Grid.ColumnSpan="2" Text="Filtro por data" Style="{StaticResource H2}" />
+                <DatePicker Grid.Row="1" Grid.Column="0"
+                            Date="{Binding StartDate, Mode=TwoWay}">
+                    <DatePicker.Behaviors>
+                        <toolkit:EventToCommandBehavior EventName="DateSelected"
+                                                        Command="{Binding LoadCommand}"/>
+                    </DatePicker.Behaviors>
+                </DatePicker>
+
+                <DatePicker Grid.Row="1" Grid.Column="1"
+                            Date="{Binding EndDate, Mode=TwoWay}">
+                    <DatePicker.Behaviors>
+                        <toolkit:EventToCommandBehavior EventName="DateSelected"
+                                                        Command="{Binding LoadCommand}"/>
+                    </DatePicker.Behaviors>
+                </DatePicker>
+            </Grid>
+        </Border>
+
+        <CollectionView ItemsSource="{Binding Items}" SelectionMode="None">
+            <CollectionView.EmptyView>
+                <Label Text="Sem registros." HorizontalOptions="Center" VerticalOptions="Center" Style="{StaticResource Hint}" />
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:HistoricoRow">
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Execute">
+                                <SwipeItem Text="Editar"
+                                           Command="{Binding Source={x:Reference Page}, Path=BindingContext.EditCommand}"
+                                           CommandParameter="{Binding .}"
+                                           BackgroundColor="{toolkit:AppThemeResource PrimaryColor}" />
+                                <SwipeItem Text="Excluir"
+                                           Command="{Binding Source={x:Reference Page}, Path=BindingContext.DeleteCommand}"
+                                           CommandParameter="{Binding .}"
+                                           BackgroundColor="{AppThemeBinding Light=#EF4444, Dark=#F87171}" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+
+                        <Border Style="{StaticResource CardBorder}">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="4">
+                                <Label Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding DataColeta, StringFormat='{}{0:dd/MM/yyyy}'}" Style="{StaticResource H2}" />
+                                <Label Grid.Row="1" Grid.Column="0" Text="{Binding IntervaloText}" Style="{StaticResource Body}" />
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding TalhaoNome}" Style="{StaticResource Body}" HorizontalTextAlignment="End" />
+
+                                <Label Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource Body}">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="N:{0}  P:{1}  K:{2}  pH:{3}  CE:{4}  T:{5}°C  Umid:{6}%">
+                                            <Binding Path="Nitrogenio"/>
+                                            <Binding Path="Fosforo"/>
+                                            <Binding Path="Potassio"/>
+                                            <Binding Path="PH"/>
+                                            <Binding Path="CondutividadeEletrica"/>
+                                            <Binding Path="TemperaturaC"/>
+                                            <Binding Path="Umidade"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </Grid>
+                        </Border>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>
