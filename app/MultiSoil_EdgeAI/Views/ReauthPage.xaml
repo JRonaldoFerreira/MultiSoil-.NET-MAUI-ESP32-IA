@@ -1,13 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xaml-comp compile="true" ?>
 <ContentPage x:Class="MultiSoil_EdgeAI.Views.ReauthPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Sessão expirada">
-    <VerticalStackLayout Padding="24" Spacing="12">
-        <Label Text="Reautenticar" FontSize="20" FontAttributes="Bold"/>
-        <Label Text="{Binding EmailMasked}" TextColor="#64748B"/>
-        <Entry Placeholder="Senha" IsPassword="True" Text="{Binding Password}"/>
-        <Button Text="Desbloquear" Command="{Binding ReauthCommand}"/>
-        <Button Text="Trocar de usuário" Command="{Binding TrocarUsuarioCommand}" />
-        <Label Text="{Binding ErrorMessage}" TextColor="#DC2626"/>
+
+    <VerticalStackLayout Padding="24" Spacing="16">
+
+        <Label Text="Reautenticar" Style="{StaticResource H1}" />
+
+        <Label Text="{Binding EmailMasked}"
+               Style="{StaticResource Body}"
+               TextColor="{StaticResource MutedText}" />
+
+        <Border Style="{StaticResource FormFieldBorder}">
+            <Entry Placeholder="Senha"
+                   IsPassword="True"
+                   Text="{Binding Password}"
+                   Style="{StaticResource FormEntry}" />
+        </Border>
+
+        <Button Text="Desbloquear"
+                Command="{Binding ReauthCommand}"
+                Style="{StaticResource PrimaryButton}" />
+
+        <Button Text="Trocar de usuário"
+                Command="{Binding TrocarUsuarioCommand}"
+                Style="{StaticResource OutlineButton}" />
+
+        <Label Text="{Binding ErrorMessage}"
+               Style="{StaticResource Body}"
+               TextColor="{AppThemeBinding Light=#EF4444, Dark=#F87171}" />
+
     </VerticalStackLayout>
 </ContentPage>
