@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xaml-comp compile="true" ?>
+<ContentPage x:Class="MultiSoil_EdgeAI.Views.HistoricoFormPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MultiSoil_EdgeAI.ViewModels"
+             x:DataType="vm:HistoricoFormViewModel"
+             Title="Registro de coleta">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Salvar" Priority="0" Command="{Binding SaveCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <Label Text="Selecionar e buscar leituras" Style="{StaticResource H1}" />
+
+            <!-- Talhão -->
+            <Border Style="{StaticResource FormFieldBorder}">
+                <Picker Title="Talhão"
+                ItemsSource="{Binding Talhoes}"
+                ItemDisplayBinding="{Binding Nome}"
+                SelectedItem="{Binding SelectedTalhao, Mode=TwoWay}" />
+            </Border>
+
+            <!-- Data/Intervalo -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Border Grid.Column="0" Style="{StaticResource FormFieldBorder}">
+                    <DatePicker Date="{Binding DataColeta, Mode=TwoWay}" />
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource FormFieldBorder}">
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <TimePicker Time="{Binding InicioTime, Mode=TwoWay}" />
+                        <TimePicker Grid.Column="1" Time="{Binding FimTime, Mode=TwoWay}" />
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Seleção de métricas -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Quais métricas capturar?" Style="{StaticResource H2}" />
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="10">
+                        <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding SelN}"  />
+                        <Label Grid.Row="0" Grid.Column="0" Margin="28,0,0,0" Text="N"     VerticalOptions="Center"/>
+                        <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding SelP}"  />
+                        <Label Grid.Row="0" Grid.Column="1" Margin="28,0,0,0" Text="P"     VerticalOptions="Center"/>
+                        <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding SelK}"  />
+                        <Label Grid.Row="1" Grid.Column="0" Margin="28,0,0,0" Text="K"     VerticalOptions="Center"/>
+                        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding SelPH}" />
+                        <Label Grid.Row="1" Grid.Column="1" Margin="28,0,0,0" Text="pH"    VerticalOptions="Center"/>
+                        <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding SelCE}" />
+                        <Label Grid.Row="2" Grid.Column="0" Margin="28,0,0,0" Text="CE"    VerticalOptions="Center"/>
+                        <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding SelT}"  />
+                        <Label Grid.Row="2" Grid.Column="1" Margin="28,0,0,0" Text="Temp"  VerticalOptions="Center"/>
+                        <CheckBox Grid.Row="3" Grid.Column="0" IsChecked="{Binding SelU}"  />
+                        <Label Grid.Row="3" Grid.Column="0" Margin="28,0,0,0" Text="Umid"  VerticalOptions="Center"/>
+                    </Grid>
+
+                    <Button Text="Buscar no servidor"
+                  Style="{StaticResource PrimaryButton}"
+                  Command="{Binding BuscarCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Pré-visualização -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Pré-visualização" Style="{StaticResource H2}" />
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+                    <Label Text="{Binding ErrorMessage}" Style="{StaticResource Body}" TextColor="{AppThemeBinding Light=#EF4444, Dark=#F87171}" />
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="6" IsVisible="{Binding HasPreview}">
+                        <Label Grid.Row="0" Grid.Column="0" Text="N"    />
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding PrevN, StringFormat='{}{0:0.##}'}"/>
+                        <Label Grid.Row="1" Grid.Column="0" Text="P"    />
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding PrevP, StringFormat='{}{0:0.##}'}"/>
+                        <Label Grid.Row="2" Grid.Column="0" Text="K"    />
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding PrevK, StringFormat='{}{0:0.##}'}"/>
+                        <Label Grid.Row="3" Grid.Column="0" Text="pH"   />
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding PrevPH, StringFormat='{}{0:0.##}'}"/>
+
+                        <Label Grid.Row="0" Grid.Column="0" Margin="0,28,0,0" Text="CE"  />
+                        <Label Grid.Row="0" Grid.Column="1" Margin="0,28,0,0" Text="{Binding PrevCE, StringFormat='{}{0:0.##}'}"/>
+                        <Label Grid.Row="1" Grid.Column="0" Margin="0,28,0,0" Text="Temp"/>
+                        <Label Grid.Row="1" Grid.Column="1" Margin="0,28,0,0" Text="{Binding PrevT,  StringFormat='{}{0:0.##}'}"/>
+                        <Label Grid.Row="2" Grid.Column="0" Margin="0,28,0,0" Text="Umid"/>
+                        <Label Grid.Row="2" Grid.Column="1" Margin="0,28,0,0" Text="{Binding PrevU,  StringFormat='{}{0:0.##}'}"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Cancelar" Style="{StaticResource OutlineButton}" Command="{Binding CancelCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

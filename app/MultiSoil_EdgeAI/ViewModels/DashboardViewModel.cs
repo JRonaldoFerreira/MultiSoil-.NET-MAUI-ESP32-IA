@@ -56,6 +56,32 @@ public partial class DashboardViewModel : BaseViewModel
     // --- Commands ---
 
     [RelayCommand]
+    private async Task AbrirHistorico()
+    {
+        KeepAlive();
+        var t = await _sel.GetSelectedAsync();
+        if (t is null)
+        {
+            await Application.Current.MainPage.DisplayAlert("Talhão", "Selecione um talhão antes.", "OK");
+            return;
+        }
+        await Shell.Current.GoToAsync(nameof(HistoricosPage));
+    }
+
+    [RelayCommand]
+    private async Task NovoRegistroHistorico()
+    {
+        KeepAlive();
+        var t = await _sel.GetSelectedAsync();
+        if (t is null)
+        {
+            await Application.Current.MainPage.DisplayAlert("Talhão", "Selecione um talhão antes.", "OK");
+            return;
+        }
+        await Shell.Current.GoToAsync($"{nameof(HistoricoFormPage)}?talhaoId={t.Id}");
+    }
+
+    [RelayCommand]
     private async Task SelectTalhao()
     {
         KeepAlive();
