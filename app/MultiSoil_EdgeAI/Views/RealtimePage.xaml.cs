@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Maui.Dispatching;
@@ -25,6 +26,9 @@ public partial class RealtimePage : ContentPage
         _sensorService = ServiceHelper.GetService<ISensorReadingService>();
 
         TitleLabel.Text = "Dados em tempo real";
+        CoordsLabel.Text = string.Empty;
+        MicroLabel.Text = string.Empty;
+        ServerLabel.Text = string.Empty;
     }
 
     protected override void OnAppearing()
@@ -54,8 +58,13 @@ public partial class RealtimePage : ContentPage
         _talhao = t;
 
         TitleLabel.Text = $"Talhão: {t.Nome} ({t.Cultura})";
-        CoordsLabel.Text = $"Lat/Lon: {t.Latitude}, {t.Longitude}";
-        MicroLabel.Text = $"Microcontrolador: {t.Microcontrolador}";
+        CoordsLabel.Text = $"Lat/Lon: {t.Latitude:0.0000}, {t.Longitude:0.0000}";
+        MicroLabel.Text = t.Microcontrolador;
+
+        // Mostra a URL configurada para este talhão
+        ServerLabel.Text = string.IsNullOrWhiteSpace(t.ServidorUrl)
+            ? "-"
+            : t.ServidorUrl;
     }
 
     private async Task StartRealtimeLoopAsync(CancellationToken ct)
@@ -64,13 +73,17 @@ public partial class RealtimePage : ContentPage
         {
             try
             {
-                // Esses parâmetros são exigidos pela interface,
-                // mas o ESP32 ignora a query string, então tanto faz.
+                // Se ainda não temos talhão, só espera e tenta de novo
+                if (_talhao is null || _talhao.Id <= 0)
+                {
+                    await Task.Delay(TimeSpan.FromMilliseconds(500), ct);
+                    continue;
+                }
+
                 var now = DateTime.Now;
-                var talhaoId = _talhao?.Id ?? 0;
 
                 var readings = await _sensorService.GetReadingsAsync(
-                    talhaoId,
+                    _talhao.Id,
                     now.Date,
                     now.TimeOfDay,
                     now.TimeOfDay,
@@ -81,33 +94,13 @@ public partial class RealtimePage : ContentPage
                 {
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        UmidLabel.Text = readings.Umid.HasValue
-                            ? $"{readings.Umid:0.0} %"
-                            : "--";
-
-                        TempLabel.Text = readings.Temp.HasValue
-                            ? $"{readings.Temp:0.0} °C"
-                            : "--";
-
-                        CeLabel.Text = readings.CE.HasValue
-                            ? $"{readings.CE:0} µS/cm"
-                            : "--";
-
-                        PhLabel.Text = readings.PH.HasValue
-                            ? $"{readings.PH:0.0}"
-                            : "--";
-
-                        NLabel.Text = readings.N.HasValue
-                            ? $"{readings.N:0} mg/kg"
-                            : "--";
-
-                        PLabel.Text = readings.P.HasValue
-                            ? $"{readings.P:0} mg/kg"
-                            : "--";
-
-                        KLabel.Text = readings.K.HasValue
-                            ? $"{readings.K:0} mg/kg"
-                            : "--";
+                        NValueLabel.Text = FormatValue(readings.N, "0");
+                        PValueLabel.Text = FormatValue(readings.P, "0");
+                        KValueLabel.Text = FormatValue(readings.K, "0");
+                        PhValueLabel.Text = FormatValue(readings.PH, "0.0");
+                        CeValueLabel.Text = FormatValue(readings.CE, "0.0");
+                        TempValueLabel.Text = FormatValue(readings.Temp, "0.0");
+                        UmidValueLabel.Text = FormatValue(readings.Umid, "0.0");
                     });
                 }
             }
@@ -129,6 +122,14 @@ public partial class RealtimePage : ContentPage
                 break;
             }
         }
+    }
+
+    private static string FormatValue(double? value, string format)
+    {
+        if (!value.HasValue)
+            return "--";
+
+        return value.Value.ToString(format, CultureInfo.InvariantCulture);
     }
 
     private async void OnBackClicked(object sender, EventArgs e)

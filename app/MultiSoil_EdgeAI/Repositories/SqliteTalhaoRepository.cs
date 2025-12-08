@@ -42,12 +42,19 @@ namespace MultiSoil_EdgeAI.Repositories
             public int pk { get; set; }
         }
 
+        // Repositories/SqliteTalhaoRepository.cs  (método completo)
+
         private async Task EnsureUserColumnsAsync()
         {
             // Garante coluna UserId (INTEGER NOT NULL DEFAULT 0) e índices
             var cols = await Conn.QueryAsync<TableInfo>("PRAGMA table_info(Talhoes)");
+
             if (!cols.Any(c => c.name == "UserId"))
                 await Conn.ExecuteAsync("ALTER TABLE Talhoes ADD COLUMN UserId INTEGER NOT NULL DEFAULT 0");
+
+            // NOVO: garante coluna ServidorUrl (TEXT NOT NULL DEFAULT '')
+            if (!cols.Any(c => c.name == "ServidorUrl"))
+                await Conn.ExecuteAsync("ALTER TABLE Talhoes ADD COLUMN ServidorUrl TEXT NOT NULL DEFAULT ''");
 
             await Conn.ExecuteAsync("CREATE INDEX IF NOT EXISTS idx_talhoes_user ON Talhoes(UserId)");
             // Opcional: único por usuário+nome
@@ -58,6 +65,7 @@ namespace MultiSoil_EdgeAI.Repositories
             if (uid != 0)
                 await Conn.ExecuteAsync("UPDATE Talhoes SET UserId = ? WHERE IFNULL(UserId,0) = 0", uid);
         }
+
 
         private async Task<int> RequireUserIdAsync()
         {

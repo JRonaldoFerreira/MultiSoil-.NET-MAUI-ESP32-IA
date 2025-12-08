@@ -35,8 +35,6 @@ public static class MauiProgram
         // ========= HTTP client para ler as medições do ESP32 =========
         builder.Services.AddHttpClient<ISensorReadingService, SensorReadingService>(client =>
         {
-            // Usa o IP que aparece no monitor serial do ESP32
-            client.BaseAddress = new Uri("http://192.168.100.38/");
             client.Timeout = TimeSpan.FromSeconds(3);
         });
 

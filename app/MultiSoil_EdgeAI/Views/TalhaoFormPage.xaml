@@ -53,6 +53,14 @@
                        Placeholder="Microcontrolador (ex.: ESP32)" />
             </Border>
 
+            <!-- NOVO: URL específica do servidor ESP32 -->
+            <Border Style="{StaticResource FormFieldBorder}">
+                <Entry x:Name="ServidorUrlEntry"
+                       Style="{StaticResource FormEntry}"
+                       Placeholder="URL do servidor ESP32 (ex.: http://192.168.0.10/)"
+                       Keyboard="Url" />
+            </Border>
+
             <Button Text="Cancelar"
                     Style="{StaticResource OutlineButton}"
                     Clicked="OnCancelClicked" />

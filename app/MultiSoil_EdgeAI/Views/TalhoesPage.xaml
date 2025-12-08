@@ -42,43 +42,68 @@
                         </SwipeView.RightItems>
 
                         <Border Style="{StaticResource CardBorder}">
-                            <Grid ColumnDefinitions="*,Auto"
-                                  RowDefinitions="Auto,Auto"
+                            <Grid Padding="12"
                                   ColumnSpacing="12"
                                   RowSpacing="4"
-                                  Padding="0">
+                                  ColumnDefinitions="*,Auto"
+                                  RowDefinitions="Auto,Auto">
 
-                                <!-- Nome -->
-                                <Label Grid.Row="0"
-                                       Grid.Column="0"
-                                       Text="{Binding Nome}"
-                                       Style="{StaticResource H2}" />
+                                <!-- ESQUERDA: Nome + Cultura -->
+                                <VerticalStackLayout Grid.Row="0"
+                                                     Grid.Column="0"
+                                                     Grid.RowSpan="2"
+                                                     Spacing="2">
 
-                                <!-- Cultura -->
-                                <Label Grid.Row="1"
-                                       Grid.Column="0"
-                                       Text="{Binding Cultura}"
-                                       Style="{StaticResource Body}"
-                                       Opacity="0.85" />
+                                    <Label Text="{Binding Nome}"
+                                           FontAttributes="Bold"
+                                           FontSize="16" />
 
-                                <!-- Microcontrolador (chip) -->
-                                <Border Grid.Row="0"
-                                        Grid.Column="1"
-                                        Grid.RowSpan="2"
-                                        Padding="8,4"
-                                        Stroke="{toolkit:AppThemeResource SecondaryColor}"
-                                        BackgroundColor="{toolkit:AppThemeResource CardColor}"
-                                        StrokeThickness="1">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="12"/>
-                                    </Border.StrokeShape>
-                                    <Label Text="{Binding Microcontrolador}"
-                                           Style="{StaticResource Body}"
-                                           HorizontalTextAlignment="Center"
-                                           VerticalTextAlignment="Center"
-                                           Opacity="0.9" />
-                                </Border>
+                                    <Label Text="{Binding Cultura}"
+                                           FontSize="13"
+                                           Opacity="0.8" />
+                                </VerticalStackLayout>
 
+                                <!-- DIREITA: Microcontrolador e Servidor em chips separados -->
+                                <VerticalStackLayout Grid.Row="0"
+                                                     Grid.Column="1"
+                                                     Grid.RowSpan="2"
+                                                     Spacing="6"
+                                                     HorizontalOptions="End"
+                                                     VerticalOptions="Center">
+
+                                    <!-- Chip do Microcontrolador -->
+                                    <Border Padding="6,2"
+                                            StrokeThickness="0"
+                                            BackgroundColor="{AppThemeBinding Light=#FFE3F2FD, Dark=#FF102A43}">
+                                        <HorizontalStackLayout Spacing="4">
+                                            <Label Text="MCU"
+                                                   FontSize="11"
+                                                   FontAttributes="Bold"
+                                                   Opacity="0.8" />
+                                            <Label Text="{Binding Microcontrolador}"
+                                                   FontSize="11"
+                                                   Opacity="0.8" />
+                                        </HorizontalStackLayout>
+                                    </Border>
+
+                                    <!-- Chip do Servidor (URL) -->
+                                    <Border Padding="6,2"
+                                            StrokeThickness="0"
+                                            BackgroundColor="{AppThemeBinding Light=#FFF1F8E9, Dark=#FF1B2A12}">
+                                        <HorizontalStackLayout Spacing="4">
+                                            <Label Text="Servidor"
+                                                   FontSize="11"
+                                                   FontAttributes="Bold"
+                                                   Opacity="0.8" />
+                                            <Label Text="{Binding ServidorUrl}"
+                                                   FontSize="11"
+                                                   LineBreakMode="TailTruncation"
+                                                   MaxLines="1"
+                                                   Opacity="0.8" />
+                                        </HorizontalStackLayout>
+                                    </Border>
+
+                                </VerticalStackLayout>
                             </Grid>
                         </Border>
 
