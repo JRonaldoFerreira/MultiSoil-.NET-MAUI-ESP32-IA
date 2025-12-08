@@ -16,16 +16,7 @@
     <VerticalStackLayout Padding="16" Spacing="12">
 
         <!-- dentro do DataTemplate (x:DataType="vm:HistoricoRow") -->
-        <Border Style="{StaticResource CardBorder}">
-            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="4">
-                <Label Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding DataColeta, StringFormat='{}{0:dd/MM/yyyy}'}" Style="{StaticResource H2}"/>
-                <Label Grid.Row="1" Grid.Column="0" Text="{Binding IntervaloText}" Style="{StaticResource Body}" />
-                <Label Grid.Row="1" Grid.Column="1" Text="{Binding TalhaoNome}" Style="{StaticResource Body}" HorizontalTextAlignment="End" />
-                <Label Grid.Row="2" Grid.ColumnSpan="2"
-       Text="{Binding ResumoText}"
-       Style="{StaticResource Body}" />
-            </Grid>
-        </Border>
+        
 
 
         <Border Style="{StaticResource CardBorder}">

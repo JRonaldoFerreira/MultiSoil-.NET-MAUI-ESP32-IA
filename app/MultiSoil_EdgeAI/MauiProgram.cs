@@ -6,6 +6,7 @@ using Microsoft.Maui.Hosting;
 using MultiSoil_EdgeAI.Data;
 using MultiSoil_EdgeAI.Interfaces;
 using MultiSoil_EdgeAI.Repositories;
+
 using MultiSoil_EdgeAI.Services;
 using MultiSoil_EdgeAI.Utils;
 using MultiSoil_EdgeAI.ViewModels;
@@ -31,11 +32,14 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        // HTTP client para buscar leituras no servidor (ajuste a URL!)
+        // ========= HTTP client para ler as medições do ESP32 =========
         builder.Services.AddHttpClient<ISensorReadingService, SensorReadingService>(client =>
         {
-            client.BaseAddress = new Uri("https://seu-servidor.exemplo/"); // ajuste
+            // Usa o IP que aparece no monitor serial do ESP32
+            client.BaseAddress = new Uri("http://192.168.100.38/");
+            client.Timeout = TimeSpan.FromSeconds(3);
         });
+
 
         // ========= Infra e Serviços =========
         builder.Services.AddSingleton<LocalDb>();                                  // DB local (estado compartilhado)

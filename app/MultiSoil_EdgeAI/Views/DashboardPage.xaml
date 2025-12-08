@@ -14,13 +14,11 @@
 
     <ScrollView>
 
-        <!-- ===== LAYOUT ===== -->
+        
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*"
           Padding="18"
           RowSpacing="16">
-       
-
-            <!-- Header com gradiente -->
+      
             <Border Grid.Row="0" Padding="20">
 
                 <Border.StrokeShape>

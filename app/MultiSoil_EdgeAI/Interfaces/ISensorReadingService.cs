@@ -2,7 +2,7 @@
 using MultiSoil_EdgeAI.Models;
 
 namespace MultiSoil_EdgeAI.Interfaces;
-//
+
 public interface ISensorReadingService
 {
     Task<SensorReadings?> GetReadingsAsync(

@@ -7,41 +7,39 @@ namespace MultiSoil_EdgeAI.Services;
 public class SensorReadingService : ISensorReadingService
 {
     private readonly HttpClient _http;
+
     public SensorReadingService(HttpClient http) => _http = http;
 
     public async Task<SensorReadings?> GetReadingsAsync(
-        int talhaoId, DateTime date, TimeSpan inicio, TimeSpan fim, SensorMetric metrics, CancellationToken ct = default)
+        int talhaoId,
+        DateTime date,
+        TimeSpan inicio,
+        TimeSpan fim,
+        SensorMetric metrics,
+        CancellationToken ct = default)
     {
-        var url = $"api/readings?talhaoId={talhaoId}&date={date:yyyy-MM-dd}&start={inicio:hh\\:mm}&end={fim:hh\\:mm}&metrics={MetricsToQuery(metrics)}";
+        // ESP32 IGNORA query string, então vamos direto em /api/readings.
+        // Mantive parâmetros no método para continuar compatível com o resto do app.
+        const string url = "api/readings";
+
         var dto = await _http.GetFromJsonAsync<ReadingDto>(url, ct);
-        if (dto is null) return null;
+        if (dto is null)
+            return null;
 
-        return new SensorReadings(
-            Has(metrics, SensorMetric.N) ? dto.N : null,
-            Has(metrics, SensorMetric.P) ? dto.P : null,
-            Has(metrics, SensorMetric.K) ? dto.K : null,
-            Has(metrics, SensorMetric.PH) ? dto.PH : null,
-            Has(metrics, SensorMetric.CE) ? dto.CE : null,
-            Has(metrics, SensorMetric.Temp) ? dto.Temp : null,
-            Has(metrics, SensorMetric.Umid) ? dto.Umid : null
-        );
+        // Aplica o filtro de métricas (o ViewModel espera isso)
+        double? n = metrics.HasFlag(SensorMetric.N) ? dto.N : null;
+        double? p = metrics.HasFlag(SensorMetric.P) ? dto.P : null;
+        double? k = metrics.HasFlag(SensorMetric.K) ? dto.K : null;
+        double? ph = metrics.HasFlag(SensorMetric.PH) ? dto.PH : null;
+        double? ce = metrics.HasFlag(SensorMetric.CE) ? dto.CE : null;
+        double? t = metrics.HasFlag(SensorMetric.Temp) ? dto.Temp : null;
+        double? u = metrics.HasFlag(SensorMetric.Umid) ? dto.Umid : null;
+
+        return new SensorReadings(n, p, k, ph, ce, t, u);
     }
 
-    private static bool Has(SensorMetric all, SensorMetric m) => (all & m) == m;
-
-    private static string MetricsToQuery(SensorMetric m)
-    {
-        var parts = new List<string>();
-        if (Has(m, SensorMetric.N)) parts.Add("N");
-        if (Has(m, SensorMetric.P)) parts.Add("P");
-        if (Has(m, SensorMetric.K)) parts.Add("K");
-        if (Has(m, SensorMetric.PH)) parts.Add("PH");
-        if (Has(m, SensorMetric.CE)) parts.Add("CE");
-        if (Has(m, SensorMetric.Temp)) parts.Add("Temp");
-        if (Has(m, SensorMetric.Umid)) parts.Add("Umid");
-        return string.Join(",", parts);
-    }
-
+    // DTO que casa com o JSON do ESP32:
+    // { "N":..., "P":..., "K":..., "PH":..., "CE":..., "Temp":..., "Umid":... }
     private sealed class ReadingDto
     {
         public double? N { get; set; }

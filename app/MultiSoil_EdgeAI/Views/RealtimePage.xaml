@@ -1,45 +1,120 @@
-
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage x:Class="MultiSoil_EdgeAI.Views.RealtimePage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Dados em tempo real">
 
-    <VerticalStackLayout Padding="16" Spacing="16">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
 
-     
-        <Label x:Name="TitleLabel"
-               Style="{StaticResource H1}" />
+            <!-- Título / cabeçalho simples -->
+            <Label x:Name="TitleLabel"
+                   FontSize="22"
+                   FontAttributes="Bold" />
 
-       
-        <Border Style="{StaticResource CardBorder}">
-            <Grid RowDefinitions="Auto,Auto"
-                  ColumnDefinitions="Auto,*"
-                  RowSpacing="6"
-                  ColumnSpacing="12">
+            <!-- Infos do talhão / microcontrolador -->
+            <Frame HasShadow="True" Padding="12" BorderColor="#DDDDDD">
+                <Grid RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="Auto,*"
+                      RowSpacing="4"
+                      ColumnSpacing="8">
 
-                <Label Grid.Row="0" Grid.Column="0"
-                       Text="Coordenadas"
-                       Style="{StaticResource H2}" />
+                    <Label Text="Lat/Lon:"
+                           Grid.Row="0" Grid.Column="0"
+                           FontSize="12"
+                           TextColor="Gray" />
+                    <Label x:Name="CoordsLabel"
+                           Grid.Row="0" Grid.Column="1"
+                           FontSize="12"
+                           TextColor="Black" />
 
-                <Label x:Name="CoordsLabel"
-                       Grid.Row="0" Grid.Column="1"
-                       Style="{StaticResource Body}" />
+                    <Label Text="Microcontrolador:"
+                           Grid.Row="1" Grid.Column="0"
+                           FontSize="12"
+                           TextColor="Gray" />
+                    <Label x:Name="MicroLabel"
+                           Grid.Row="1" Grid.Column="1"
+                           FontSize="12"
+                           TextColor="Black" />
+                </Grid>
+            </Frame>
 
-                <Label Grid.Row="1" Grid.Column="0"
-                       Text="Microcontrolador"
-                       Style="{StaticResource H2}" />
+            <!-- Card com leituras em tempo real -->
+            <Frame HasShadow="True" Padding="16" BorderColor="#DDDDDD">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="*,Auto"
+                      RowSpacing="8"
+                      ColumnSpacing="8">
 
-                <Label x:Name="MicroLabel"
-                       Grid.Row="1" Grid.Column="1"
-                       Style="{StaticResource Body}" />
-            </Grid>
-        </Border>
+                    <!-- Umidade -->
+                    <Label Text="Umidade do Solo"
+                           Grid.Row="0" Grid.Column="0"
+                           FontSize="14" />
+                    <Label x:Name="UmidLabel"
+                           Grid.Row="0" Grid.Column="1"
+                           FontSize="16"
+                           FontAttributes="Bold" />
 
-      
-        <Button Text="Voltar"
-                Clicked="OnBackClicked"
-                Style="{StaticResource OutlineButton}" />
+                    <!-- Temperatura -->
+                    <Label Text="Temperatura"
+                           Grid.Row="1" Grid.Column="0"
+                           FontSize="14" />
+                    <Label x:Name="TempLabel"
+                           Grid.Row="1" Grid.Column="1"
+                           FontSize="16"
+                           FontAttributes="Bold" />
 
-    </VerticalStackLayout>
+                    <!-- CE -->
+                    <Label Text="Condutividade (CE)"
+                           Grid.Row="2" Grid.Column="0"
+                           FontSize="14" />
+                    <Label x:Name="CeLabel"
+                           Grid.Row="2" Grid.Column="1"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+
+                    <!-- pH -->
+                    <Label Text="pH"
+                           Grid.Row="3" Grid.Column="0"
+                           FontSize="14" />
+                    <Label x:Name="PhLabel"
+                           Grid.Row="3" Grid.Column="1"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+
+                    <!-- N -->
+                    <Label Text="Nitrogenio (N)"
+                           Grid.Row="4" Grid.Column="0"
+                           FontSize="14" />
+                    <Label x:Name="NLabel"
+                           Grid.Row="4" Grid.Column="1"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+
+                    <!-- P -->
+                    <Label Text="Fosforo (P)"
+                           Grid.Row="5" Grid.Column="0"
+                           FontSize="14" />
+                    <Label x:Name="PLabel"
+                           Grid.Row="5" Grid.Column="1"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+
+                    <!-- K -->
+                    <Label Text="Potassio (K)"
+                           Grid.Row="6" Grid.Column="0"
+                           FontSize="14" />
+                    <Label x:Name="KLabel"
+                           Grid.Row="6" Grid.Column="1"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                </Grid>
+            </Frame>
+
+            <Button Text="Voltar"
+                    Clicked="OnBackClicked"
+                    HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
