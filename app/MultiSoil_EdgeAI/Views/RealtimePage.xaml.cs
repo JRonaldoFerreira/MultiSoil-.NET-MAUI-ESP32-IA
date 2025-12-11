@@ -15,6 +15,7 @@ public partial class RealtimePage : ContentPage
     public string? Id { get; set; }
 
     private readonly ISensorReadingService _sensorService;
+    private readonly IRealtimeSampleRepository _realtimeRepo;
     private CancellationTokenSource? _cts;
     private Talhao? _talhao;
 
@@ -22,8 +23,9 @@ public partial class RealtimePage : ContentPage
     {
         InitializeComponent();
 
-        // Resolve o serviço via ServiceHelper (já inicializado em MauiProgram)
+        // Resolve serviços via DI (ServiceHelper inicializado no MauiProgram)
         _sensorService = ServiceHelper.GetService<ISensorReadingService>();
+        _realtimeRepo = ServiceHelper.GetService<IRealtimeSampleRepository>();
 
         TitleLabel.Text = "Dados em tempo real";
         CoordsLabel.Text = string.Empty;
@@ -92,6 +94,7 @@ public partial class RealtimePage : ContentPage
 
                 if (readings is not null)
                 {
+                    // Atualiza UI
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
                         NValueLabel.Text = FormatValue(readings.N, "0");
@@ -102,6 +105,30 @@ public partial class RealtimePage : ContentPage
                         TempValueLabel.Text = FormatValue(readings.Temp, "0.0");
                         UmidValueLabel.Text = FormatValue(readings.Umid, "0.0");
                     });
+
+                    // === NOVO: grava essa leitura no banco local ===
+                    try
+                    {
+                        var sample = new RealtimeSample
+                        {
+                            TalhaoId = _talhao.Id,
+                            Timestamp = now,
+
+                            Nitrogenio = readings.N,
+                            Fosforo = readings.P,
+                            Potassio = readings.K,
+                            PH = readings.PH,
+                            CondutividadeEletrica = readings.CE,
+                            TemperaturaC = readings.Temp,
+                            Umidade = readings.Umid
+                        };
+
+                        await _realtimeRepo.AddAsync(sample);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Erro ao salvar RealtimeSample: {ex.Message}");
+                    }
                 }
             }
             catch (OperationCanceledException)
