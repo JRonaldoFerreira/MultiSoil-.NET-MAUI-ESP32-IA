@@ -43,9 +43,17 @@ public static class MauiProgram
         builder.Services.AddSingleton<LocalDb>();                                  // DB local (estado compartilhado)
         builder.Services.AddSingleton<ISessionService, SessionService>();          // sessão/autenticação
         builder.Services.AddSingleton<IAuthService, AuthService>();
+        // Serviço de previsão (IA simples)
+        builder.Services.AddSingleton<IMetricPredictionService, SimpleMetricPredictionService>();
         builder.Services.AddSingleton<ITalhaoSelectionService, TalhaoSelectionService>(); // seleção de talhão atual
         builder.Services.AddTransient<IRealtimeSampleRepository, SqliteRealtimeSampleRepository>();
         builder.Services.AddTransient<HistoricoDetalheViewModel>();
+        // ViewModels
+        builder.Services.AddTransient<IAPredictionViewModel>();
+
+        // Views
+        builder.Services.AddTransient<IAPredictionPage>();
+
         // ViewModels (incluindo o de tempo real e os de histórico)
         builder.Services.AddTransient<RealtimeViewModel>();
         // ========= Repositórios (acesso a dados) =========

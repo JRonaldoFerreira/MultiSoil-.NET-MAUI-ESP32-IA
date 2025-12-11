@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<?xaml-comp compile="true" ?>
+<ContentPage x:Class="MultiSoil_EdgeAI.Views.IAPredictionPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MultiSoil_EdgeAI.ViewModels"
+             x:DataType="vm:IAPredictionViewModel"
+             Title="IA - Predição">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Trocar talhão"
+                     Priority="0"
+                     Order="Primary"
+                     Command="{Binding ChangeTalhaoCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Talhão atual -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Talhão atual"
+                           Style="{StaticResource H2}" />
+                    <Label Text="{Binding TalhaoDescricao}"
+                           Style="{StaticResource Body}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Botão de previsão -->
+            <Button Text="Prever estado atual (IA)"
+                    Command="{Binding PreverCommand}" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}" />
+
+            <!-- Previsão -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Previsão atual"
+                           Style="{StaticResource H2}" />
+
+                    <Label Style="{StaticResource Body}"
+                           Text="{Binding PredN, StringFormat='N: {0:0.##}'}" />
+                    <Label Style="{StaticResource Body}"
+                           Text="{Binding PredP, StringFormat='P: {0:0.##}'}" />
+                    <Label Style="{StaticResource Body}"
+                           Text="{Binding PredK, StringFormat='K: {0:0.##}'}" />
+                    <Label Style="{StaticResource Body}"
+                           Text="{Binding PredPH, StringFormat='pH: {0:0.##}'}" />
+                    <Label Style="{StaticResource Body}"
+                           Text="{Binding PredCE, StringFormat='CE: {0:0.##}'}" />
+                    <Label Style="{StaticResource Body}"
+                           Text="{Binding PredT, StringFormat='T: {0:0.##} °C'}" />
+                    <Label Style="{StaticResource Body}"
+                           Text="{Binding PredU, StringFormat='Umid: {0:0.##} %'}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Mensagem de erro (se houver) -->
+            <Label Text="{Binding ErrorMessage}"
+                   Style="{StaticResource Hint}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -2,9 +2,15 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Storage;
+using Microsoft.Maui.ApplicationModel.DataTransfer;
 using MultiSoil_EdgeAI.Interfaces;
 using MultiSoil_EdgeAI.Models;
 
@@ -121,7 +127,6 @@ public partial class HistoricoDetalheViewModel : ObservableObject, IQueryAttribu
         await Shell.Current.GoToAsync("..");
     }
 
-    // NOVO: excluir o registro de histórico atual
     [RelayCommand]
     private async Task Delete()
     {
@@ -137,9 +142,83 @@ public partial class HistoricoDetalheViewModel : ObservableObject, IQueryAttribu
             return;
 
         await _historicoRepo.DeleteAsync(_id);
-
-        // Volta para a lista; ao voltar, HistoricosPage.OnAppearing()
-        // recarrega o histórico e o item some da lista.
         await Shell.Current.GoToAsync("..");
+    }
+
+    // NOVO: exportar CSV com todas as capturas associadas
+    [RelayCommand]
+    private async Task ExportCsv()
+    {
+        if (_id <= 0)
+            return;
+
+        try
+        {
+            IsBusy = true;
+            ErrorMessage = null;
+
+            // Garante que temos capturas carregadas
+            if (Capturas.Count == 0)
+            {
+                await LoadAsync();
+            }
+
+            if (Capturas.Count == 0)
+            {
+                await Shell.Current.DisplayAlert(
+                    "Exportar CSV",
+                    "Não há capturas para exportar.",
+                    "OK");
+                return;
+            }
+
+            var culture = CultureInfo.InvariantCulture;
+            var sb = new StringBuilder();
+
+            // Cabeçalho
+            sb.AppendLine("Timestamp;Nitrogenio;Fosforo;Potassio;PH;CondutividadeEletrica;TemperaturaC;Umidade");
+
+            string F(double? v) => v.HasValue
+                ? v.Value.ToString("0.######", culture)
+                : string.Empty;
+
+            foreach (var s in Capturas)
+            {
+                var line = string.Join(";", new[]
+                {
+                    s.Timestamp.ToString("yyyy-MM-dd HH:mm:ss", culture),
+                    F(s.Nitrogenio),
+                    F(s.Fosforo),
+                    F(s.Potassio),
+                    F(s.PH),
+                    F(s.CondutividadeEletrica),
+                    F(s.TemperaturaC),
+                    F(s.Umidade)
+                });
+
+                sb.AppendLine(line);
+            }
+
+            var fileName = $"historico_{_id}_{DataColeta:yyyyMMdd}.csv";
+            var dir = FileSystem.CacheDirectory;
+            var path = Path.Combine(dir, fileName);
+
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+
+            await Share.RequestAsync(new ShareFileRequest
+            {
+                Title = $"Exportar histórico #{_id}",
+                File = new ShareFile(path)
+            });
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erro ao exportar CSV: {ex.Message}";
+            await Shell.Current.DisplayAlert("Erro", ErrorMessage, "OK");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

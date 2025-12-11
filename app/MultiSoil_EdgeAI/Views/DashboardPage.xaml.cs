@@ -19,4 +19,9 @@ public partial class DashboardPage : ContentPage
         base.OnAppearing();
         await _vm.OnAppearingAsync();
     }
+
+    private async void OnIAPredictionClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(IAPredictionPage));
+    }
 }

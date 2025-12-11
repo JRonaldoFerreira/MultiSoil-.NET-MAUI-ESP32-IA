@@ -9,15 +9,21 @@
              Title="Detalhes do histórico">
 
     <ContentPage.ToolbarItems>
-        <!-- Botão de EXCLUIR registro -->
-        <ToolbarItem Text="Excluir"
+        <!-- Exportar CSV -->
+        <ToolbarItem Text="Exportar CSV"
                      Priority="0"
+                     Order="Primary"
+                     Command="{Binding ExportCsvCommand}" />
+
+        <!-- Excluir registro -->
+        <ToolbarItem Text="Excluir"
+                     Priority="1"
                      Order="Primary"
                      Command="{Binding DeleteCommand}" />
 
-        <!-- Botão de voltar (além da seta padrão) -->
+        <!-- Voltar (além da seta padrão) -->
         <ToolbarItem Text="Voltar"
-                     Priority="1"
+                     Priority="2"
                      Order="Secondary"
                      Command="{Binding VoltarCommand}" />
     </ContentPage.ToolbarItems>
