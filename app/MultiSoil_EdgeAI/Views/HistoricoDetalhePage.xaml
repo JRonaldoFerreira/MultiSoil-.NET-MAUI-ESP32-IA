@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<?xaml-comp compile="true" ?>
+<ContentPage x:Class="MultiSoil_EdgeAI.Views.HistoricoDetalhePage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MultiSoil_EdgeAI.ViewModels"
+             xmlns:models="clr-namespace:MultiSoil_EdgeAI.Models"
+             x:DataType="vm:HistoricoDetalheViewModel"
+             Title="Detalhes do histórico">
+
+    <ContentPage.ToolbarItems>
+        <!-- Botão de EXCLUIR registro -->
+        <ToolbarItem Text="Excluir"
+                     Priority="0"
+                     Order="Primary"
+                     Command="{Binding DeleteCommand}" />
+
+        <!-- Botão de voltar (além da seta padrão) -->
+        <ToolbarItem Text="Voltar"
+                     Priority="1"
+                     Order="Secondary"
+                     Command="{Binding VoltarCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid Padding="16"
+          RowDefinitions="Auto,*"
+          RowSpacing="12">
+
+        <!-- Cabeçalho -->
+        <Border Grid.Row="0"
+                Style="{StaticResource CardBorder}">
+            <VerticalStackLayout Spacing="4">
+                <Label Text="{Binding DataColeta, StringFormat='{}{0:dd/MM/yyyy}'}"
+                       Style="{StaticResource H2}" />
+                <Label Text="{Binding TalhaoDescricao}"
+                       Style="{StaticResource Body}" />
+                <Label Text="{Binding IntervaloText}"
+                       Style="{StaticResource Body}" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Lista de capturas -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Capturas}">
+            <CollectionView.EmptyView>
+                <Label Text="{Binding ErrorMessage, FallbackValue='Nenhuma captura encontrada.'}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Style="{StaticResource Hint}" />
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:RealtimeSample">
+                    <Border Style="{StaticResource CardBorder}">
+                        <Grid ColumnDefinitions="Auto,*"
+                              RowDefinitions="Auto,Auto"
+                              ColumnSpacing="12"
+                              RowSpacing="4">
+
+                            <!-- Hora da captura -->
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="{Binding Timestamp, StringFormat='{}{0:HH:mm:ss}'}"
+                                   Style="{StaticResource H2}" />
+
+                            <Label Grid.Row="0"
+                                   Grid.Column="1"
+                                   Text="Captura"
+                                   Style="{StaticResource Body}" />
+
+                            <!-- Valores medidos -->
+                            <Label Grid.Row="1"
+                                   Grid.ColumnSpan="2"
+                                   Style="{StaticResource Body}">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="N:{0}  P:{1}  K:{2}  pH:{3}  CE:{4}  T:{5}°C  Umid:{6}%">
+                                        <Binding Path="Nitrogenio" />
+                                        <Binding Path="Fosforo" />
+                                        <Binding Path="Potassio" />
+                                        <Binding Path="PH" />
+                                        <Binding Path="CondutividadeEletrica" />
+                                        <Binding Path="TemperaturaC" />
+                                        <Binding Path="Umidade" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

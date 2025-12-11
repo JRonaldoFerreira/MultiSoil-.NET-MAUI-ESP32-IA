@@ -45,7 +45,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IAuthService, AuthService>();
         builder.Services.AddSingleton<ITalhaoSelectionService, TalhaoSelectionService>(); // seleção de talhão atual
         builder.Services.AddTransient<IRealtimeSampleRepository, SqliteRealtimeSampleRepository>();
-
+        builder.Services.AddTransient<HistoricoDetalheViewModel>();
         // ViewModels (incluindo o de tempo real e os de histórico)
         builder.Services.AddTransient<RealtimeViewModel>();
         // ========= Repositórios (acesso a dados) =========
@@ -67,6 +67,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ReauthPage>();
         builder.Services.AddTransient<DashboardPage>();
         builder.Services.AddTransient<HistoricosPage>();
+        builder.Services.AddTransient<HistoricoDetalhePage>();
         builder.Services.AddTransient<HistoricoFormPage>();
         builder.Services.AddTransient<TalhoesPage>();
         builder.Services.AddTransient<TalhaoFormPage>();

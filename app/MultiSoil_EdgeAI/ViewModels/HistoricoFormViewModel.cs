@@ -17,18 +17,19 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
     private readonly IRealtimeSampleRepository _realtimeRepo;
     private readonly ITalhaoRepository _talhoesRepo;
 
-    private int _id;           // se >0 edita (carrega valores salvos)
-    private int _prefTalhaoId; // talhão preferido (quando vindo da lista)
+    private int _id;           // se >0: edição
+    private int _prefTalhaoId; // talhão vindo da lista
 
     public ObservableCollection<Talhao> Talhoes { get; } = new();
 
     [ObservableProperty] private Talhao? selectedTalhao;
     [ObservableProperty] private DateTime dataColeta = DateTime.Today;
 
-    // se quiser começar o formulário com 00:00–23:59:
+    // Horário de início/fim do intervalo
     [ObservableProperty] private TimeSpan inicioTime = TimeSpan.Zero;              // 00:00
-    [ObservableProperty] private TimeSpan fimTime = new TimeSpan(23, 59, 0);
-    // Seleção de métricas (quais serão consideradas ao montar o histórico)
+    [ObservableProperty] private TimeSpan fimTime = new TimeSpan(23, 59, 0);       // 23:59
+
+    // Quais métricas considerar
     [ObservableProperty] private bool selN = true;
     [ObservableProperty] private bool selP = true;
     [ObservableProperty] private bool selK = true;
@@ -37,7 +38,7 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
     [ObservableProperty] private bool selT = true;
     [ObservableProperty] private bool selU = true;
 
-    // Prévia (valores agregados a partir das leituras em tempo real)
+    // Prévia (valores AGREGADOS a partir das leituras em tempo real)
     [ObservableProperty] private double? prevN;
     [ObservableProperty] private double? prevP;
     [ObservableProperty] private double? prevK;
@@ -89,6 +90,7 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
             }
         }
 
+        // Novo registro: se veio com talhão pré-selecionado
         if (_prefTalhaoId > 0)
             SelectedTalhao = Talhoes.FirstOrDefault(t => t.Id == _prefTalhaoId);
     }
@@ -101,6 +103,7 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
             Talhoes.Add(t);
     }
 
+    // Recebe parâmetros de navegação (id, talhaoId, etc.)
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (query.TryGetValue("id", out var idObj) &&
@@ -118,7 +121,6 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
         }
     }
 
-    // === BOTÃO "BUSCAR NO SERVIDOR" (AGORA: BUSCAR NO BANCO LOCAL) ===
     // === BOTÃO "BUSCAR NO SERVIDOR" (AGORA: BUSCAR NO BANCO LOCAL, CONSIDERANDO SEGUNDOS) ===
     [RelayCommand]
     private async Task Buscar()
@@ -133,7 +135,7 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
             return;
         }
 
-        // Agora permitimos intervalo com mesmo minuto (InicioTime == FimTime)
+        // Permite início == fim, mas não permite fim < início
         if (FimTime < InicioTime)
         {
             ErrorMessage = "Hora final deve ser maior ou igual à inicial.";
@@ -145,20 +147,19 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
 
         // 1) Intervalo escolhido pelo usuário
         //
-        // Exemplo:
-        //   Inicio = 10:00, Fim = 10:00  ->  pega de 10:00:00 até 10:00:59.999...
-        //   Inicio = 10:00, Fim = 10:02  ->  pega de 10:00:00 até 10:02:59.999...
+        //   Inicio = 10:00, Fim = 10:00  -> 10:00:00 até 10:00:59.999
+        //   Inicio = 10:00, Fim = 10:02  -> 10:00:00 até 10:02:59.999
         var start = dia + InicioTime;
 
         var endInclusive = (dia + FimTime)
-            .AddMinutes(1)   // passa para o início do minuto seguinte
-            .AddTicks(-1);   // volta 1 tick => último instante do minuto desejado
+            .AddMinutes(1)   // vai para o próximo minuto
+            .AddTicks(-1);   // volta 1 tick -> último instante do minuto desejado
 
         try
         {
             IsBusy = true;
 
-            // Busca leituras em tempo real no intervalo (agora pegando todos os segundos do(s) minuto(s))
+            // Busca TODAS as leituras em tempo real no intervalo
             var samples = await _realtimeRepo.GetSamplesAsync(
                 SelectedTalhao.Id,
                 start,
@@ -168,7 +169,7 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
             if (samples.Count == 0)
             {
                 var fullDayStart = dia;
-                var fullDayEnd = dia.AddDays(1).AddTicks(-1); // 23:59:59.999...
+                var fullDayEnd = dia.AddDays(1).AddTicks(-1); // 23:59:59.999
 
                 samples = await _realtimeRepo.GetSamplesAsync(
                     SelectedTalhao.Id,
@@ -228,8 +229,6 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
             IsBusy = false;
         }
     }
-
-
 
     // ======== SALVAR ========
 

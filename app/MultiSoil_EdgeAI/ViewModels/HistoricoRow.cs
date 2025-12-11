@@ -1,17 +1,17 @@
-﻿using System;
+﻿// ViewModels/HistoricoRow.cs
+using System;
 using System.Linq;
 using MultiSoil_EdgeAI.Models;
 
 namespace MultiSoil_EdgeAI.ViewModels;
 
-public sealed class HistoricoRow
+public class HistoricoRow
 {
     public int Id { get; init; }
     public DateTime DataColeta { get; init; }
-    public string TalhaoNome { get; init; } = "";
-    public string IntervaloText { get; init; } = "";
+    public string TalhaoNome { get; init; } = string.Empty;
+    public string IntervaloText { get; init; } = string.Empty;
 
-    // >>> NULLABLE AQUI TAMBÉM <<<
     public double? Nitrogenio { get; init; }
     public double? Fosforo { get; init; }
     public double? Potassio { get; init; }
@@ -20,6 +20,7 @@ public sealed class HistoricoRow
     public double? TemperaturaC { get; init; }
     public double? Umidade { get; init; }
 
+    // Texto que aparece na lista de histórico
     public string ResumoText
     {
         get
@@ -38,13 +39,18 @@ public sealed class HistoricoRow
                 Part("Umid",Umidade,               "%")
             }.Where(p => p is not null);
 
-            return parts.Any() ? string.Join("  ", parts!) : "Sem leituras registradas";
+            return parts.Any()
+                ? string.Join("  ", parts!)
+                : "Sem leituras registradas";
         }
     }
 
     public static HistoricoRow From(Historico h, string talhaoNome)
     {
-        static string Fmt(int min) => TimeSpan.FromMinutes(Math.Max(0, min)).ToString(@"hh\:mm");
+        static string Fmt(int min) =>
+            TimeSpan.FromMinutes(Math.Max(0, min))
+                    .ToString(@"hh\:mm");
+
         return new HistoricoRow
         {
             Id = h.Id,
@@ -52,7 +58,6 @@ public sealed class HistoricoRow
             TalhaoNome = talhaoNome,
             IntervaloText = $"{Fmt(h.HoraInicioMin)} – {Fmt(h.HoraFimMin)}",
 
-            // >>> MAPEAMENTO NULLABLE->NULLABLE <<<
             Nitrogenio = h.Nitrogenio,
             Fosforo = h.Fosforo,
             Potassio = h.Potassio,

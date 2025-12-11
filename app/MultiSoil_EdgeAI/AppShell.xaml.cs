@@ -13,6 +13,9 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(Views.RealtimePage), typeof(Views.RealtimePage));
         Routing.RegisterRoute(nameof(Views.HistoricosPage), typeof(Views.HistoricosPage));
         Routing.RegisterRoute(nameof(Views.HistoricoFormPage), typeof(Views.HistoricoFormPage));
+        Routing.RegisterRoute(nameof(Views.HistoricoDetalhePage), typeof(Views.HistoricoDetalhePage));
+
+
 
 
     }

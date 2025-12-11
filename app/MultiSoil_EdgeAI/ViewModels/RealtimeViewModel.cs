@@ -1,10 +1,11 @@
-﻿using System;
+﻿// ViewModels/RealtimeViewModel.cs
+using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MultiSoil_EdgeAI.Interfaces;
 using MultiSoil_EdgeAI.Models;
-using MultiSoil_EdgeAI.Services; // <- IMPORTANTE para ITalhaoSelectionService
+using MultiSoil_EdgeAI.Services; // para ITalhaoSelectionService
 
 namespace MultiSoil_EdgeAI.ViewModels;
 
@@ -19,10 +20,8 @@ public partial class RealtimeViewModel : ObservableObject
     [ObservableProperty] private double? k;
 
     // IMPORTANTE:
-    // [ObservableProperty] private double? ph;
-    // gera a propriedade pública "Ph" (não "PH").
-    // [ObservableProperty] private double? ce;
-    // gera a propriedade pública "Ce" (não "CE").
+    // [ObservableProperty] private double? ph; -> gera "Ph"
+    // [ObservableProperty] private double? ce; -> gera "Ce"
     [ObservableProperty] private double? ph;
     [ObservableProperty] private double? ce;
 
@@ -66,16 +65,16 @@ public partial class RealtimeViewModel : ObservableObject
                 return;
             }
 
-            // Atualiza propriedades geradas pelo ObservableProperty
+            // Atualiza propriedades ligadas à tela
             N = readings.N;
             P = readings.P;
             K = readings.K;
-            Ph = readings.PH;   // <- propriedade é Ph, não PH
-            Ce = readings.CE;   // <- propriedade é Ce, não CE
+            Ph = readings.PH;   // propriedade é "Ph"
+            Ce = readings.CE;   // propriedade é "Ce"
             Temp = readings.Temp;
             Umid = readings.Umid;
 
-            // Salva no banco local
+            // Salva como amostra no banco local (RealtimeSamples)
             var sample = new RealtimeSample
             {
                 TalhaoId = talhao.Id,
