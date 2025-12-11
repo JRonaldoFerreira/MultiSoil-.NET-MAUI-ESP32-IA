@@ -119,8 +119,8 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
     }
 
     // === BOTÃO "BUSCAR NO SERVIDOR" (AGORA: BUSCAR NO BANCO LOCAL) ===
+    // === BOTÃO "BUSCAR NO SERVIDOR" (AGORA: BUSCAR NO BANCO LOCAL, CONSIDERANDO SEGUNDOS) ===
     [RelayCommand]
-    
     private async Task Buscar()
     {
         ErrorMessage = null;
@@ -133,9 +133,10 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
             return;
         }
 
-        if (FimTime <= InicioTime)
+        // Agora permitimos intervalo com mesmo minuto (InicioTime == FimTime)
+        if (FimTime < InicioTime)
         {
-            ErrorMessage = "Hora final deve ser maior que a inicial.";
+            ErrorMessage = "Hora final deve ser maior ou igual à inicial.";
             await Shell.Current.DisplayAlert("Histórico", ErrorMessage, "OK");
             return;
         }
@@ -143,14 +144,25 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
         var dia = DataColeta.Date;
 
         // 1) Intervalo escolhido pelo usuário
+        //
+        // Exemplo:
+        //   Inicio = 10:00, Fim = 10:00  ->  pega de 10:00:00 até 10:00:59.999...
+        //   Inicio = 10:00, Fim = 10:02  ->  pega de 10:00:00 até 10:02:59.999...
         var start = dia + InicioTime;
-        var end = dia + FimTime;
+
+        var endInclusive = (dia + FimTime)
+            .AddMinutes(1)   // passa para o início do minuto seguinte
+            .AddTicks(-1);   // volta 1 tick => último instante do minuto desejado
 
         try
         {
             IsBusy = true;
 
-            var samples = await _realtimeRepo.GetSamplesAsync(SelectedTalhao.Id, start, end);
+            // Busca leituras em tempo real no intervalo (agora pegando todos os segundos do(s) minuto(s))
+            var samples = await _realtimeRepo.GetSamplesAsync(
+                SelectedTalhao.Id,
+                start,
+                endInclusive);
 
             // 2) Se não achou nada, tenta o dia inteiro como fallback
             if (samples.Count == 0)
@@ -158,7 +170,10 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
                 var fullDayStart = dia;
                 var fullDayEnd = dia.AddDays(1).AddTicks(-1); // 23:59:59.999...
 
-                samples = await _realtimeRepo.GetSamplesAsync(SelectedTalhao.Id, fullDayStart, fullDayEnd);
+                samples = await _realtimeRepo.GetSamplesAsync(
+                    SelectedTalhao.Id,
+                    fullDayStart,
+                    fullDayEnd);
 
                 if (samples.Count == 0)
                 {
@@ -168,10 +183,10 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
                 }
                 else
                 {
-                    // Opcional: avisa que usou o dia inteiro
+                    // Avisa que caiu pro dia inteiro
                     await Shell.Current.DisplayAlert(
                         "Histórico",
-                        $"Não foram encontradas leituras no intervalo {InicioTime:hh\\:mm}–{FimTime:hh\\:mm}, " +
+                        $"Não foram encontradas leituras no intervalo {InicioTime:hh\\:mm\\:ss}–{FimTime:hh\\:mm\\:ss}, " +
                         $"mas foram encontradas {samples.Count} leituras ao longo do dia todo.",
                         "OK");
                 }
@@ -180,12 +195,15 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
             // Helper: média ignorando null
             static double? Avg(Func<RealtimeSample, double?> selector, IEnumerable<RealtimeSample> list)
             {
-                var vals = list.Select(selector)
-                               .Where(v => v.HasValue)
-                               .Select(v => v!.Value)
-                               .ToList();
+                var vals = list
+                    .Select(selector)
+                    .Where(v => v.HasValue)
+                    .Select(v => v!.Value)
+                    .ToList();
 
-                if (vals.Count == 0) return null;
+                if (vals.Count == 0)
+                    return null;
+
                 return vals.Average();
             }
 
@@ -208,9 +226,9 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
         finally
         {
             IsBusy = false;
-            SaveCommand.NotifyCanExecuteChanged();
         }
     }
+
 
 
     // ======== SALVAR ========
