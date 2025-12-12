@@ -15,17 +15,11 @@ const char* WIFI_PASSWORD = "joseronaldo02";
 
 #define BAUD_RATE 4800
 
-// Pinos da UART2 do ESP32 (ajuste se necessário)
+
 #define RS485_RX 16
 #define RS485_TX 17
 
-// Se o seu módulo RS485 tiver pino DE/RE, defina aqui
-// e descomente a linha abaixo:
-// #define RS485_DE_RE 4
 
-// Requisição Modbus para o sensor NPK 7x1
-// (endereço 0x01, função 0x03, registradores 0x0000, quantidade 7, CRC)
-// Esses bytes vieram do seu código original.
 uint8_t byteRequest[8] = {
   0x01, 0x03, 0x00, 0x00,
   0x00, 0x07, 0x04, 0x08
@@ -64,9 +58,7 @@ void resetNPKSensor();
 void handleRoot();
 void handleReadings();
 
-// =====================================================
-// SETUP
-// =====================================================
+
 void setup() {
   Serial.begin(115200);
   delay(1000);
@@ -84,7 +76,7 @@ void setup() {
   Serial2.begin(BAUD_RATE, SERIAL_8N1, RS485_RX, RS485_TX);
   Serial.println("Serial2 (RS485) inicializada.");
 
-  // Conecta no Wi-Fi
+
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
@@ -98,6 +90,13 @@ void setup() {
   Serial.println("Wi-Fi conectado!");
   Serial.print("IP: ");
   Serial.println(WiFi.localIP());
+  Serial.println("Wi-Fi conectado!");
+  Serial.print("IP do ESP32: ");
+  Serial.println(WiFi.localIP());
+  Serial.print("Acesse no navegador: http://");
+  Serial.print(WiFi.localIP());
+  Serial.println("/api/readings");
+  Serial.println();
 
   // Configura rotas do servidor HTTP
   server.on("/", HTTP_GET, handleRoot);
