@@ -48,12 +48,12 @@
                     <Label Text="Entrar" Style="{StaticResource H2}" />
 
                     <!-- Email -->
-                    <Label Text="Email" Style="{StaticResource Body}" />
+                    <Label Text="Usuário" Style="{StaticResource Body}" />
                     <Border Style="{StaticResource FormFieldBorder}">
                         <Entry
                             Style="{StaticResource FormEntry}"
                             Text="{Binding Email}"
-                            Placeholder="ana@example.com"
+                            Placeholder="ronaldo01"
                             Keyboard="Email" />
                     </Border>
 
