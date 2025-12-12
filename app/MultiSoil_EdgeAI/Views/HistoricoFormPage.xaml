@@ -19,9 +19,9 @@
             <!-- Talhão -->
             <Border Style="{StaticResource FormFieldBorder}">
                 <Picker Title="Talhão"
-                ItemsSource="{Binding Talhoes}"
-                ItemDisplayBinding="{Binding Nome}"
-                SelectedItem="{Binding SelectedTalhao, Mode=TwoWay}" />
+                        ItemsSource="{Binding Talhoes}"
+                        ItemDisplayBinding="{Binding Nome}"
+                        SelectedItem="{Binding SelectedTalhao, Mode=TwoWay}" />
             </Border>
 
             <!-- Data/Intervalo -->
@@ -31,8 +31,18 @@
                 </Border>
                 <Border Grid.Column="1" Style="{StaticResource FormFieldBorder}">
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
-                        <TimePicker Time="{Binding InicioTime, Mode=TwoWay}" />
-                        <TimePicker Grid.Column="1" Time="{Binding FimTime, Mode=TwoWay}" />
+
+                        <!-- INÍCIO - FORÇANDO FORMATO 24H -->
+                        <TimePicker Time="{Binding InicioTime, Mode=TwoWay}"
+                                    Format="HH:mm" />
+                        <!-- FIM - FORÇANDO FORMATO 24H -->
+
+                        <!-- INÍCIO - FORÇANDO FORMATO 24H -->
+                        <TimePicker Grid.Column="1"
+                                    Time="{Binding FimTime, Mode=TwoWay}"
+                                    Format="HH:mm" />
+                        <!-- FIM - FORÇANDO FORMATO 24H -->
+
                     </Grid>
                 </Border>
             </Grid>
@@ -59,8 +69,8 @@
                     </Grid>
 
                     <Button Text="Buscar no servidor"
-                  Style="{StaticResource PrimaryButton}"
-                  Command="{Binding BuscarCommand}" />
+                            Style="{StaticResource PrimaryButton}"
+                            Command="{Binding BuscarCommand}" />
                 </VerticalStackLayout>
             </Border>
 
@@ -69,28 +79,41 @@
                 <VerticalStackLayout Spacing="6">
                     <Label Text="Pré-visualização" Style="{StaticResource H2}" />
                     <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
-                    <Label Text="{Binding ErrorMessage}" Style="{StaticResource Body}" TextColor="{AppThemeBinding Light=#EF4444, Dark=#F87171}" />
-                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="6" IsVisible="{Binding HasPreview}">
+                    <Label Text="{Binding ErrorMessage}"
+                           Style="{StaticResource Body}"
+                           TextColor="{AppThemeBinding Light=#EF4444, Dark=#F87171}" />
+
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto"
+                          ColumnSpacing="12" RowSpacing="6"
+                          IsVisible="{Binding HasPreview}">
+
                         <Label Grid.Row="0" Grid.Column="0" Text="N"    />
-                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding PrevN, StringFormat='{}{0:0.##}'}"/>
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding PrevN,  StringFormat='{}{0:0.##}'}"/>
+
                         <Label Grid.Row="1" Grid.Column="0" Text="P"    />
-                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding PrevP, StringFormat='{}{0:0.##}'}"/>
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding PrevP,  StringFormat='{}{0:0.##}'}"/>
+
                         <Label Grid.Row="2" Grid.Column="0" Text="K"    />
-                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding PrevK, StringFormat='{}{0:0.##}'}"/>
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding PrevK,  StringFormat='{}{0:0.##}'}"/>
+
                         <Label Grid.Row="3" Grid.Column="0" Text="pH"   />
                         <Label Grid.Row="3" Grid.Column="1" Text="{Binding PrevPH, StringFormat='{}{0:0.##}'}"/>
 
                         <Label Grid.Row="0" Grid.Column="0" Margin="0,28,0,0" Text="CE"  />
                         <Label Grid.Row="0" Grid.Column="1" Margin="0,28,0,0" Text="{Binding PrevCE, StringFormat='{}{0:0.##}'}"/>
+
                         <Label Grid.Row="1" Grid.Column="0" Margin="0,28,0,0" Text="Temp"/>
                         <Label Grid.Row="1" Grid.Column="1" Margin="0,28,0,0" Text="{Binding PrevT,  StringFormat='{}{0:0.##}'}"/>
+
                         <Label Grid.Row="2" Grid.Column="0" Margin="0,28,0,0" Text="Umid"/>
                         <Label Grid.Row="2" Grid.Column="1" Margin="0,28,0,0" Text="{Binding PrevU,  StringFormat='{}{0:0.##}'}"/>
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
-            <Button Text="Cancelar" Style="{StaticResource OutlineButton}" Command="{Binding CancelCommand}" />
+            <Button Text="Cancelar"
+                    Style="{StaticResource OutlineButton}"
+                    Command="{Binding CancelCommand}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

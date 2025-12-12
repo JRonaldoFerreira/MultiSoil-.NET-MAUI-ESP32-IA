@@ -17,21 +17,23 @@ public partial class TalhaoFormPage : ContentPage
         InitializeComponent();
     }
 
-
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
         if (int.TryParse(Id, out var id))
         {
             _model = await _repo.GetByIdAsync(id);
+
             if (_model is not null)
             {
-                AreaEntry.Text = _model.AreaHa.ToString(CultureInfo.InvariantCulture);
                 NomeEntry.Text = _model.Nome;
                 CulturaEntry.Text = _model.Cultura;
-                LatEntry.Text = _model.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                LonEntry.Text = _model.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                AreaEntry.Text = _model.AreaHa.ToString(CultureInfo.InvariantCulture);
+                LatEntry.Text = _model.Latitude.ToString(CultureInfo.InvariantCulture);
+                LonEntry.Text = _model.Longitude.ToString(CultureInfo.InvariantCulture);
                 MicroEntry.Text = _model.Microcontrolador;
+                ServidorUrlEntry.Text = _model.ServidorUrl;
             }
         }
         else
@@ -42,19 +44,23 @@ public partial class TalhaoFormPage : ContentPage
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
-        if (_model is null) return;
+        if (_model is null)
+            return;
+
         _model.Nome = NomeEntry.Text?.Trim() ?? string.Empty;
         _model.Cultura = CulturaEntry.Text?.Trim() ?? string.Empty;
         _model.Microcontrolador = MicroEntry.Text?.Trim() ?? string.Empty;
+        _model.ServidorUrl = ServidorUrlEntry.Text?.Trim() ?? string.Empty;
 
         if (double.TryParse(AreaEntry.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var area))
             _model.AreaHa = area;
         else
-            _model.AreaHa = 0d; // garante valor para NOT NULL
+            _model.AreaHa = 0d;
 
-        if (double.TryParse(LatEntry.Text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var lat))
+        if (double.TryParse(LatEntry.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var lat))
             _model.Latitude = lat;
-        if (double.TryParse(LonEntry.Text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var lon))
+
+        if (double.TryParse(LonEntry.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var lon))
             _model.Longitude = lon;
 
         if (_model.Id == 0)

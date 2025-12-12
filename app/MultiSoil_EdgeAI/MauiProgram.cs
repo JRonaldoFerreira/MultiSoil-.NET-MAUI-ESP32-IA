@@ -6,6 +6,7 @@ using Microsoft.Maui.Hosting;
 using MultiSoil_EdgeAI.Data;
 using MultiSoil_EdgeAI.Interfaces;
 using MultiSoil_EdgeAI.Repositories;
+
 using MultiSoil_EdgeAI.Services;
 using MultiSoil_EdgeAI.Utils;
 using MultiSoil_EdgeAI.ViewModels;
@@ -31,18 +32,30 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        // HTTP client para buscar leituras no servidor (ajuste a URL!)
+        // ========= HTTP client para ler as medições do ESP32 =========
         builder.Services.AddHttpClient<ISensorReadingService, SensorReadingService>(client =>
         {
-            client.BaseAddress = new Uri("https://seu-servidor.exemplo/"); // ajuste
+            client.Timeout = TimeSpan.FromSeconds(3);
         });
+
 
         // ========= Infra e Serviços =========
         builder.Services.AddSingleton<LocalDb>();                                  // DB local (estado compartilhado)
         builder.Services.AddSingleton<ISessionService, SessionService>();          // sessão/autenticação
         builder.Services.AddSingleton<IAuthService, AuthService>();
+        // Serviço de previsão (IA simples)
+        builder.Services.AddSingleton<IMetricPredictionService, SimpleMetricPredictionService>();
         builder.Services.AddSingleton<ITalhaoSelectionService, TalhaoSelectionService>(); // seleção de talhão atual
+        builder.Services.AddTransient<IRealtimeSampleRepository, SqliteRealtimeSampleRepository>();
+        builder.Services.AddTransient<HistoricoDetalheViewModel>();
+        // ViewModels
+        builder.Services.AddTransient<IAPredictionViewModel>();
 
+        // Views
+        builder.Services.AddTransient<IAPredictionPage>();
+
+        // ViewModels (incluindo o de tempo real e os de histórico)
+        builder.Services.AddTransient<RealtimeViewModel>();
         // ========= Repositórios (acesso a dados) =========
         builder.Services.AddTransient<IUserRepository, SqliteUserRepository>();
         builder.Services.AddTransient<ITalhaoRepository, SqliteTalhaoRepository>();
@@ -62,6 +75,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ReauthPage>();
         builder.Services.AddTransient<DashboardPage>();
         builder.Services.AddTransient<HistoricosPage>();
+        builder.Services.AddTransient<HistoricoDetalhePage>();
         builder.Services.AddTransient<HistoricoFormPage>();
         builder.Services.AddTransient<TalhoesPage>();
         builder.Services.AddTransient<TalhaoFormPage>();

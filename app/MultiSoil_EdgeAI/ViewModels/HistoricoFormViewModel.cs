@@ -1,5 +1,9 @@
 ﻿// ViewModels/HistoricoFormViewModel.cs
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MultiSoil_EdgeAI.Interfaces;
@@ -10,20 +14,22 @@ namespace MultiSoil_EdgeAI.ViewModels;
 public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributableVm
 {
     private readonly IHistoricoRepository _repo;
+    private readonly IRealtimeSampleRepository _realtimeRepo;
     private readonly ITalhaoRepository _talhoesRepo;
-    private readonly ISensorReadingService _sensorService;
 
-    private int _id;           // se >0 edita (carrega valores salvos)
-    private int _prefTalhaoId; // talhão preferido (quando vindo da lista)
+    private int _id;           // se >0: edição
+    private int _prefTalhaoId; // talhão vindo da lista
 
     public ObservableCollection<Talhao> Talhoes { get; } = new();
 
     [ObservableProperty] private Talhao? selectedTalhao;
     [ObservableProperty] private DateTime dataColeta = DateTime.Today;
-    [ObservableProperty] private TimeSpan inicioTime = TimeSpan.FromHours(8);
-    [ObservableProperty] private TimeSpan fimTime = TimeSpan.FromHours(9);
 
-    // Seleção de métricas
+    // Horário de início/fim do intervalo
+    [ObservableProperty] private TimeSpan inicioTime = TimeSpan.Zero;              // 00:00
+    [ObservableProperty] private TimeSpan fimTime = new TimeSpan(23, 59, 0);       // 23:59
+
+    // Quais métricas considerar
     [ObservableProperty] private bool selN = true;
     [ObservableProperty] private bool selP = true;
     [ObservableProperty] private bool selK = true;
@@ -32,7 +38,7 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
     [ObservableProperty] private bool selT = true;
     [ObservableProperty] private bool selU = true;
 
-    // Prévia
+    // Prévia (valores AGREGADOS a partir das leituras em tempo real)
     [ObservableProperty] private double? prevN;
     [ObservableProperty] private double? prevP;
     [ObservableProperty] private double? prevK;
@@ -48,20 +54,21 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
     public HistoricoFormViewModel(
         IHistoricoRepository repo,
         ITalhaoRepository talhoesRepo,
-        ISensorReadingService sensorService)
+        IRealtimeSampleRepository realtimeRepo)
     {
         _repo = repo;
         _talhoesRepo = talhoesRepo;
-        _sensorService = sensorService;
+        _realtimeRepo = realtimeRepo;
     }
 
+    // Chamado no OnAppearing da View
     public async Task OnAppearing()
     {
         await LoadTalhoesAsync();
 
         if (_id > 0)
         {
-            // Edição: carrega o registro
+            // Edição: carrega o registro já salvo
             var m = await _repo.GetByIdAsync(_id);
             if (m is not null)
             {
@@ -70,15 +77,20 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
                 InicioTime = TimeSpan.FromMinutes(m.HoraInicioMin);
                 FimTime = TimeSpan.FromMinutes(m.HoraFimMin);
 
-                PrevN = m.Nitrogenio; PrevP = m.Fosforo; PrevK = m.Potassio;
-                PrevPH = m.PH; PrevCE = m.CondutividadeEletrica;
-                PrevT = m.TemperaturaC; PrevU = m.Umidade;
+                PrevN = m.Nitrogenio;
+                PrevP = m.Fosforo;
+                PrevK = m.Potassio;
+                PrevPH = m.PH;
+                PrevCE = m.CondutividadeEletrica;
+                PrevT = m.TemperaturaC;
+                PrevU = m.Umidade;
 
                 HasPreview = true;
                 return;
             }
         }
 
+        // Novo registro: se veio com talhão pré-selecionado
         if (_prefTalhaoId > 0)
             SelectedTalhao = Talhoes.FirstOrDefault(t => t.Id == _prefTalhaoId);
     }
@@ -87,31 +99,29 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
     {
         Talhoes.Clear();
         var list = await _talhoesRepo.GetAllAsync();
-        foreach (var t in list) Talhoes.Add(t);
+        foreach (var t in list)
+            Talhoes.Add(t);
     }
 
+    // Recebe parâmetros de navegação (id, talhaoId, etc.)
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (query.TryGetValue("id", out var idObj) && idObj is string idStr && int.TryParse(idStr, out var id))
+        if (query.TryGetValue("id", out var idObj) &&
+            idObj is string idStr &&
+            int.TryParse(idStr, out var id))
+        {
             _id = id;
+        }
 
-        if (query.TryGetValue("talhaoId", out var tObj) && tObj is string tStr && int.TryParse(tStr, out var tid))
+        if (query.TryGetValue("talhaoId", out var tObj) &&
+            tObj is string tStr &&
+            int.TryParse(tStr, out var tid))
+        {
             _prefTalhaoId = tid;
+        }
     }
 
-    private SensorMetric BuildSelection()
-    {
-        SensorMetric m = SensorMetric.None;
-        if (SelN) m |= SensorMetric.N;
-        if (SelP) m |= SensorMetric.P;
-        if (SelK) m |= SensorMetric.K;
-        if (SelPH) m |= SensorMetric.PH;
-        if (SelCE) m |= SensorMetric.CE;
-        if (SelT) m |= SensorMetric.Temp;
-        if (SelU) m |= SensorMetric.Umid;
-        return m;
-    }
-
+    // === BOTÃO "BUSCAR NO SERVIDOR" (AGORA: BUSCAR NO BANCO LOCAL, CONSIDERANDO SEGUNDOS) ===
     [RelayCommand]
     private async Task Buscar()
     {
@@ -121,48 +131,106 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
         if (SelectedTalhao is null)
         {
             ErrorMessage = "Selecione um talhão.";
+            await Shell.Current.DisplayAlert("Histórico", ErrorMessage, "OK");
             return;
         }
-        var sel = BuildSelection();
-        if (sel == SensorMetric.None)
+
+        // Permite início == fim, mas não permite fim < início
+        if (FimTime < InicioTime)
         {
-            ErrorMessage = "Selecione ao menos uma métrica.";
+            ErrorMessage = "Hora final deve ser maior ou igual à inicial.";
+            await Shell.Current.DisplayAlert("Histórico", ErrorMessage, "OK");
             return;
         }
+
+        var dia = DataColeta.Date;
+
+        // 1) Intervalo escolhido pelo usuário
+        //
+        //   Inicio = 10:00, Fim = 10:00  -> 10:00:00 até 10:00:59.999
+        //   Inicio = 10:00, Fim = 10:02  -> 10:00:00 até 10:02:59.999
+        var start = dia + InicioTime;
+
+        var endInclusive = (dia + FimTime)
+            .AddMinutes(1)   // vai para o próximo minuto
+            .AddTicks(-1);   // volta 1 tick -> último instante do minuto desejado
 
         try
         {
             IsBusy = true;
-            var result = await _sensorService.GetReadingsAsync(
-                SelectedTalhao.Id, DataColeta, InicioTime, FimTime, sel);
 
-            if (result is null)
+            // Busca TODAS as leituras em tempo real no intervalo
+            var samples = await _realtimeRepo.GetSamplesAsync(
+                SelectedTalhao.Id,
+                start,
+                endInclusive);
+
+            // 2) Se não achou nada, tenta o dia inteiro como fallback
+            if (samples.Count == 0)
             {
-                ErrorMessage = "Não há dados no servidor para o período selecionado.";
-                return;
+                var fullDayStart = dia;
+                var fullDayEnd = dia.AddDays(1).AddTicks(-1); // 23:59:59.999
+
+                samples = await _realtimeRepo.GetSamplesAsync(
+                    SelectedTalhao.Id,
+                    fullDayStart,
+                    fullDayEnd);
+
+                if (samples.Count == 0)
+                {
+                    ErrorMessage = "Nenhuma leitura em tempo real encontrada para essa data no banco local.";
+                    await Shell.Current.DisplayAlert("Histórico", ErrorMessage, "OK");
+                    return;
+                }
+                else
+                {
+                    // Avisa que caiu pro dia inteiro
+                    await Shell.Current.DisplayAlert(
+                        "Histórico",
+                        $"Não foram encontradas leituras no intervalo {InicioTime:hh\\:mm\\:ss}–{FimTime:hh\\:mm\\:ss}, " +
+                        $"mas foram encontradas {samples.Count} leituras ao longo do dia todo.",
+                        "OK");
+                }
             }
 
-            // Preenche somente o que foi solicitado (o service já retorna null para o não solicitado)
-            PrevN = result.N;
-            PrevP = result.P;
-            PrevK = result.K;
-            PrevPH = result.PH;
-            PrevCE = result.CE;
-            PrevT = result.Temp;
-            PrevU = result.Umid;
+            // Helper: média ignorando null
+            static double? Avg(Func<RealtimeSample, double?> selector, IEnumerable<RealtimeSample> list)
+            {
+                var vals = list
+                    .Select(selector)
+                    .Where(v => v.HasValue)
+                    .Select(v => v!.Value)
+                    .ToList();
+
+                if (vals.Count == 0)
+                    return null;
+
+                return vals.Average();
+            }
+
+            // Aplica seleção de métricas: só preenche o que estiver marcado
+            PrevN = SelN ? Avg(s => s.Nitrogenio, samples) : null;
+            PrevP = SelP ? Avg(s => s.Fosforo, samples) : null;
+            PrevK = SelK ? Avg(s => s.Potassio, samples) : null;
+            PrevPH = SelPH ? Avg(s => s.PH, samples) : null;
+            PrevCE = SelCE ? Avg(s => s.CondutividadeEletrica, samples) : null;
+            PrevT = SelT ? Avg(s => s.TemperaturaC, samples) : null;
+            PrevU = SelU ? Avg(s => s.Umidade, samples) : null;
 
             HasPreview = true;
         }
         catch (Exception ex)
         {
-            ErrorMessage = $"Falha ao buscar dados: {ex.Message}";
+            ErrorMessage = $"Falha ao buscar dados locais: {ex.Message}";
+            await Shell.Current.DisplayAlert("Erro", ErrorMessage, "OK");
         }
         finally
         {
             IsBusy = false;
-            SaveCommand.NotifyCanExecuteChanged();
         }
     }
+
+    // ======== SALVAR ========
 
     public bool CanSave => HasPreview && SelectedTalhao is not null;
 
@@ -182,7 +250,6 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
             HoraInicioMin = (int)InicioTime.TotalMinutes,
             HoraFimMin = (int)FimTime.TotalMinutes,
 
-            // >>> PREVIEW É double?; MODEL TAMBÉM É double?
             Nitrogenio = PrevN,
             Fosforo = PrevP,
             Potassio = PrevK,
@@ -191,8 +258,11 @@ public partial class HistoricoFormViewModel : ObservableObject, IQueryAttributab
             TemperaturaC = PrevT,
             Umidade = PrevU
         };
-        if (_id == 0) await _repo.CreateAsync(model);
-        else await _repo.UpdateAsync(model);
+
+        if (_id == 0)
+            await _repo.CreateAsync(model);
+        else
+            await _repo.UpdateAsync(model);
 
         await Shell.Current.GoToAsync("..");
     }

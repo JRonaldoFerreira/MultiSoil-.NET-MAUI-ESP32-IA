@@ -1,45 +1,213 @@
-
+<?xml version="1.0" encoding="utf-8" ?>
+<?xaml-comp compile="true" ?>
 <ContentPage x:Class="MultiSoil_EdgeAI.Views.RealtimePage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Dados em tempo real">
 
-    <VerticalStackLayout Padding="16" Spacing="16">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
 
-     
-        <Label x:Name="TitleLabel"
-               Style="{StaticResource H1}" />
+            <!-- Título / talhão -->
+            <Label x:Name="TitleLabel"
+                   Text="Dados em tempo real"
+                   FontSize="20"
+                   FontAttributes="Bold" />
 
-       
-        <Border Style="{StaticResource CardBorder}">
-            <Grid RowDefinitions="Auto,Auto"
-                  ColumnDefinitions="Auto,*"
-                  RowSpacing="6"
-                  ColumnSpacing="12">
+            <!-- Informações do talhão / dispositivo -->
+            <Grid ColumnDefinitions="Auto,*"
+                  RowDefinitions="Auto,Auto,Auto"
+                  ColumnSpacing="8"
+                  RowSpacing="2">
 
                 <Label Grid.Row="0" Grid.Column="0"
-                       Text="Coordenadas"
-                       Style="{StaticResource H2}" />
-
+                       Text="Coordenadas:"
+                       FontSize="12"
+                       Opacity="0.7" />
                 <Label x:Name="CoordsLabel"
                        Grid.Row="0" Grid.Column="1"
-                       Style="{StaticResource Body}" />
+                       FontSize="12"
+                       Opacity="0.9" />
 
                 <Label Grid.Row="1" Grid.Column="0"
-                       Text="Microcontrolador"
-                       Style="{StaticResource H2}" />
-
+                       Text="Microcontrolador:"
+                       FontSize="12"
+                       Opacity="0.7" />
                 <Label x:Name="MicroLabel"
                        Grid.Row="1" Grid.Column="1"
-                       Style="{StaticResource Body}" />
+                       FontSize="12"
+                       Opacity="0.9" />
+
+                <Label Grid.Row="2" Grid.Column="0"
+                       Text="Servidor:"
+                       FontSize="12"
+                       Opacity="0.7" />
+                <Label x:Name="ServerLabel"
+                       Grid.Row="2" Grid.Column="1"
+                       FontSize="12"
+                       LineBreakMode="TailTruncation"
+                       Opacity="0.9" />
             </Grid>
-        </Border>
 
-      
-        <Button Text="Voltar"
-                Clicked="OnBackClicked"
-                Style="{StaticResource OutlineButton}" />
+            <!-- Espaço visual -->
+            <BoxView HeightRequest="8" Opacity="0" />
 
-    </VerticalStackLayout>
+            <!-- Cards de medidas em tempo real -->
+            <Grid ColumnDefinitions="*,*"
+                  RowDefinitions="Auto,Auto,Auto,Auto"
+                  ColumnSpacing="12"
+                  RowSpacing="12">
+
+                <!-- N -->
+                <Border Grid.Row="0" Grid.Column="0"
+                        Padding="10"
+                        StrokeThickness="1"
+                        Stroke="#22000000"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFFFF, Dark=#FF1A1A1A}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Nitrogênio (N)"
+                               FontSize="11"
+                               Opacity="0.7" />
+                        <Label x:Name="NValueLabel"
+                               Text="--"
+                               FontSize="20"
+                               FontAttributes="Bold" />
+                        <Label Text="mg/kg"
+                               FontSize="10"
+                               Opacity="0.5" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- P -->
+                <Border Grid.Row="0" Grid.Column="1"
+                        Padding="10"
+                        StrokeThickness="1"
+                        Stroke="#22000000"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFFFF, Dark=#FF1A1A1A}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Fósforo (P)"
+                               FontSize="11"
+                               Opacity="0.7" />
+                        <Label x:Name="PValueLabel"
+                               Text="--"
+                               FontSize="20"
+                               FontAttributes="Bold" />
+                        <Label Text="mg/kg"
+                               FontSize="10"
+                               Opacity="0.5" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- K -->
+                <Border Grid.Row="1" Grid.Column="0"
+                        Padding="10"
+                        StrokeThickness="1"
+                        Stroke="#22000000"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFFFF, Dark=#FF1A1A1A}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Potássio (K)"
+                               FontSize="11"
+                               Opacity="0.7" />
+                        <Label x:Name="KValueLabel"
+                               Text="--"
+                               FontSize="20"
+                               FontAttributes="Bold" />
+                        <Label Text="mg/kg"
+                               FontSize="10"
+                               Opacity="0.5" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- pH -->
+                <Border Grid.Row="1" Grid.Column="1"
+                        Padding="10"
+                        StrokeThickness="1"
+                        Stroke="#22000000"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFFFF, Dark=#FF1A1A1A}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="pH"
+                               FontSize="11"
+                               Opacity="0.7" />
+                        <Label x:Name="PhValueLabel"
+                               Text="--"
+                               FontSize="20"
+                               FontAttributes="Bold" />
+                        <!-- Espaço "fake" só para alinhar com os outros -->
+                        <Label Text=" "
+                               FontSize="10"
+                               Opacity="0" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- CE -->
+                <Border Grid.Row="2" Grid.Column="0"
+                        Padding="10"
+                        StrokeThickness="1"
+                        Stroke="#22000000"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFFFF, Dark=#FF1A1A1A}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Condutividade (CE)"
+                               FontSize="11"
+                               Opacity="0.7" />
+                        <Label x:Name="CeValueLabel"
+                               Text="--"
+                               FontSize="20"
+                               FontAttributes="Bold" />
+                        <Label Text="dS/m"
+                               FontSize="10"
+                               Opacity="0.5" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Temperatura -->
+                <Border Grid.Row="2" Grid.Column="1"
+                        Padding="10"
+                        StrokeThickness="1"
+                        Stroke="#22000000"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFFFF, Dark=#FF1A1A1A}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Temperatura"
+                               FontSize="11"
+                               Opacity="0.7" />
+                        <Label x:Name="TempValueLabel"
+                               Text="--"
+                               FontSize="20"
+                               FontAttributes="Bold" />
+                        <Label Text="°C"
+                               FontSize="10"
+                               Opacity="0.5" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Umidade -->
+                <Border Grid.Row="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Padding="10"
+                        StrokeThickness="1"
+                        Stroke="#22000000"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFFFF, Dark=#FF1A1A1A}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Umidade do solo"
+                               FontSize="11"
+                               Opacity="0.7" />
+                        <Label x:Name="UmidValueLabel"
+                               Text="--"
+                               FontSize="20"
+                               FontAttributes="Bold" />
+                        <Label Text="%"
+                               FontSize="10"
+                               Opacity="0.5" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </Grid>
+
+            <!-- Botão Voltar -->
+            <Button Text="Voltar"
+                    Margin="0,16,0,0"
+                    Clicked="OnBackClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
