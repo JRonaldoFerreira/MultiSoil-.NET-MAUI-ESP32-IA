@@ -8,7 +8,9 @@
 
     <VerticalStackLayout Padding="24" Spacing="16">
 
-        <Label Text="Reautenticar" Style="{StaticResource H1}" />
+        <Label Text="Reautenticar"
+Style="{StaticResource H2}"
+Margin="0,0,0,4"/>
 
         <Label Text="{Binding EmailMasked}"
                Style="{StaticResource Body}"
