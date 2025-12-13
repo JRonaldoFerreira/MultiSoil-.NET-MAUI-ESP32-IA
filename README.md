@@ -2,14 +2,13 @@
 
 Este é um projeto de monitoramento inteligente do solo, utilizando a plataforma .NET MAUI, ESP32 e Inteligência Artificial para análise de dados. O objetivo deste projeto é criar uma solução multiplataforma para monitorar e analisar o solo, integrando sensores de umidade e temperatura do solo com dispositivos ESP32, e gerenciar os dados utilizando uma interface móvel construída com .NET MAUI.
 
-![photo_5037804670809738009_y](https://github.com/user-attachments/assets/e1f8314d-caed-4d43-a512-796a669e2493)
+<img src="https://github.com/user-attachments/assets/e1f8314d-caed-4d43-a512-796a669e2493" width="300" />
 
-![photo_5037804670809738012_y](https://github.com/user-attachments/assets/2546c2ec-cc76-479c-baf1-c8232e0aaa19)
+<img src="https://github.com/user-attachments/assets/2546c2ec-cc76-479c-baf1-c8232e0aaa19" width="300" />
 
+<img src="https://github.com/user-attachments/assets/d11063dd-5a32-40e4-8fb6-e74c3c59fd48" width="300" />
 
-![photo_5037804670809738010_y](https://github.com/user-attachments/assets/d11063dd-5a32-40e4-8fb6-e74c3c59fd48)
-
-![photo_5037804670809738011_y](https://github.com/user-attachments/assets/505664d3-a39b-46a8-a4d6-73c59d3fdb3e)
+<img src="https://github.com/user-attachments/assets/505664d3-a39b-46a8-a4d6-73c59d3fdb3e" width="300" />
 
 
 O projeto está em fase de desenvolvimento, o uso de IA é apenas exemplificado com um pobre modelo de regressão linear.
@@ -56,5 +55,3 @@ O projeto está dividido nas seguintes pastas principais:
 
 
 
-```xml
-<Image Source="Images/your-image.png" />
