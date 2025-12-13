@@ -6,8 +6,8 @@
 // =====================================================
 // CONFIGURAÇÃO DE WI-FI
 // =====================================================
-const char* WIFI_SSID     = "Infinix HOT 30";
-const char* WIFI_PASSWORD = "joseronaldo02";
+const char* WIFI_SSID     = "Infinix";
+const char* WIFI_PASSWORD = "xxxxxxxxxxxxx";
 
 // =====================================================
 // CONFIGURAÇÃO DO SENSOR NPK (RS485 MODBUS)
